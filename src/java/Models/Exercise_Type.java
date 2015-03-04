@@ -11,5 +11,21 @@ package Models;
  * @author Stuart
  */
 public class Exercise_Type {
+    private int exerciseID;
+    private String name;
     
+    //Default constructor
+    public Exercise_Type(){}
+    
+    //Accessors
+    public int getExerciseID(){
+        return exerciseID;
+    }
+    public String getName(){
+        return name;
+    }
+    //Mutators
+    public void setName(String name){
+        this.name = name;
+    }
 }

@@ -25,7 +25,7 @@ public abstract class Activity {
     }
     
     
-    //Accessors and mutators
+    //Accessors
     int getActivityID(){
         return ActivityID;
     }
@@ -36,6 +36,7 @@ public abstract class Activity {
         return date;
     }
     
+    //Mutators
     void setUsername(String given){
         username = given;
     }
