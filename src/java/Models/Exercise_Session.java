@@ -11,7 +11,6 @@ package Models;
  * @author Stuart
  */
 public class Exercise_Session extends Activity{
-    private int session_ID;
     private int exercise_ID;
     private int duration;
     private int distance;
@@ -19,10 +18,26 @@ public class Exercise_Session extends Activity{
     //Default constructor
     public Exercise_Session(){}
     
-    //Accessors
-    public int getSessionID(){
-        return session_ID;
+    //When activity ID is not known
+    public Exercise_Session(String username, String date, int exercise_ID, int duration, int distance){
+        this.username = username;
+        this.date = date;
+        this.exercise_ID = exercise_ID;
+        this.duration = duration;
+        this.distance = distance;
     }
+    
+    //When activity ID is known
+    public Exercise_Session(int activityID, String username, String date, int exercise_ID, int duration, int distance){
+        this.ActivityID = activityID;
+        this.username = username;
+        this.date = date;
+        this.exercise_ID = exercise_ID;
+        this.duration = duration;
+        this.distance = distance;
+    }
+    
+    //Accessors
     public int getExerciseID(){
         return exercise_ID;
     }

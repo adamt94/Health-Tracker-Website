@@ -16,9 +16,9 @@ public abstract class Activity {
     protected String date;
 
     //Default constructor
-    Activity(){}
+    public Activity(){}
     
-    Activity(int id, String gUsername, String gDate){
+    public Activity(int id, String gUsername, String gDate){
         ActivityID = id;
         username = gUsername;
         date = gDate;
@@ -26,21 +26,21 @@ public abstract class Activity {
     
     
     //Accessors
-    int getActivityID(){
+    public int getActivityID(){
         return ActivityID;
     }
-    String getUsername(){
+    public String getUsername(){
         return username;
     }
-    String getDate(){
+    public String getDate(){
         return date;
     }
     
     //Mutators
-    void setUsername(String given){
+    public void setUsername(String given){
         username = given;
     }
-    void setDate(String given){
+    public void setDate(String given){
         date = given;
     }
     

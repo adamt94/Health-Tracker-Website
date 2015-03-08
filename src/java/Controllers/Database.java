@@ -1,5 +1,7 @@
 package Controllers;
 
+import Models.Activity;
+import Models.Exercise_Session;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,6 +11,8 @@ import javax.servlet.ServletException;
 
 //Models
 import Models.User;
+import Models.Exercise_Type;
+import java.util.ArrayList;
 
 public class Database {
 
@@ -102,6 +106,105 @@ public class Database {
         }
     }
 
+    //For getting all available exercise types from the database
+    public ArrayList<Exercise_Type> getAvailableExercises() {
+        try {
+            String sql;
+            sql = "SELECT * FROM exercise_type";
+            ResultSet rs;
+            rs = runQuery(sql, getConnection());
+
+            //For storing all the available exercises
+            ArrayList<Exercise_Type> exercises = new ArrayList();
+
+            while (rs.next()) {
+                //Get the exercise ID
+                int exerciseID = Integer.valueOf(rs.getString("exerciseID"));
+                //Get the name of the exercise
+                String name = rs.getString("name");
+                //Get the calories burned per minute of the exercise
+                double caloriesPerMinute = Double.valueOf(rs.getString("caloriesPerMinute"));
+                //Add a new exercise object to our arraylist
+                exercises.add(new Exercise_Type(exerciseID, name, caloriesPerMinute));
+            }
+
+            return exercises;
+
+        } catch (Exception ex) {
+            //Change this later
+            System.out.println("getAvailableExercises error: " + ex);
+        }
+        return null;//garbage
+    }
+
+    //Add activity parts of an activity to the database
+    //Returns the activity id of the created activity entry
+    public int addActivity(Activity activity) {
+        try {
+            String sql;
+
+            sql = "INSERT INTO activity(username, date) "
+                    + "VALUES ('" + activity.getUsername() + "', '"
+                    + activity.getDate() + "')"
+                    + "RETURNING \"activityID\";";
+            Database db = new Database();
+            ResultSet rs = runQuery(sql, db.getConnection());
+
+            rs.first();
+            System.out.println("activity id: " + rs.getInt("activityID"));
+            return rs.getInt("activityID");
+        } catch (Exception ex) {
+            System.out.println("addActivity error: " + ex);
+        }
+        return -1;//Failure return
+    }
+
+    //Add exercise activity to the database
+    public boolean registerExercise(Exercise_Session e) {
+        try {
+
+            //Update the activity table
+            int activityID = addActivity(e);
+
+            //Update the exercise_session table
+            String sql;
+            sql = "INSERT INTO exercise_session(\"activityID\", \"exerciseID\", duration, distance) "
+                    + "VALUES('" + activityID + "','"
+                    + e.getExerciseID() + "', '"
+                    + e.getDuration() + "', '"
+                    + e.getDistance()
+                    + "');";
+            Database db = new Database();
+            db.runUpdateQuery(sql, db.getConnection());
+
+            //Return true for success
+            return true;
+        } catch (Exception ex) {
+            System.out.println("registerExercise error: " + ex);
+        }
+        //Return false for failure
+        return false;//garbage
+    }
+
+    //Get ResultSet of User's exercise history
+    public ResultSet getUserExerciseHistory(User user) {
+        try {
+            String sql;
+            //Get all the user's store exercise information
+            sql = "SELECT * FROM activity \n" +
+                  "INNER JOIN exercise_session ON (activity.\"activityID\" = exercise_session.\"activityID\") \n" +
+                  "INNER JOIN exercise_type ON (exercise_session.\"exerciseID\" = exercise_type.\"exerciseID\")\n" +
+                  "WHERE activity.username = '" + user.getUsername() + "'";
+            ResultSet rs;
+            Database db = new Database();
+            rs = db.runQuery(sql, db.getConnection());
+            return rs;
+        } catch (Exception ex) {
+
+        }
+        return null;//garbage
+    }
+
     //DATABASE ACCESS METHODS BELOW
     //A method for creating database connection
     public Connection getConnection() throws ServletException {
@@ -110,9 +213,9 @@ public class Database {
         } catch (ClassNotFoundException ex) {
             throw new ServletException(String.format("Error: Cannot find JDBC driver..."));
         }
-        String username = "student"; //Username for database (postgres)
-        String password = "dbpassword"; //Password for database (postgres)
-        String url = "jdbc:postgresql://127.0.0.1/studentdb"; //Url to connect to database
+        String username = "postgres"; //Username for database (postgres)
+        String password = "postgres"; //Password for database (postgres)
+        String url = "jdbc:postgresql://127.0.0.1/HealthTrackerDatabase"; //Url to connect to database
         Connection connection;
         try {
             connection = DriverManager.getConnection(url, username, password);

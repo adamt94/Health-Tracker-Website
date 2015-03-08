@@ -11,7 +11,6 @@ package Models;
  * @author Stuart
  */
 public class Registered_Meal extends Activity{
-    private int registeredMeal_ID;
     private int meal_Sustenance_ID;
     private String type;
     
@@ -25,9 +24,6 @@ public class Registered_Meal extends Activity{
     }
     
     //Accessors
-    public int getRegisteredMealID(){
-        return registeredMeal_ID;
-    }
     public int getMealSustenanceID(){
         return meal_Sustenance_ID;
     }

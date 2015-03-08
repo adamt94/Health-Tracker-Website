@@ -13,9 +13,16 @@ package Models;
 public class Exercise_Type {
     private int exerciseID;
     private String name;
+    private double caloriesPerMinute;
     
     //Default constructor
     public Exercise_Type(){}
+    
+    public Exercise_Type(int givenID, String gName, double gCPM){
+        exerciseID = givenID;
+        name = gName;
+        caloriesPerMinute = gCPM;
+    }
     
     //Accessors
     public int getExerciseID(){
