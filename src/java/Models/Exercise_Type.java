@@ -10,7 +10,7 @@ package Models;
  *
  * @author Stuart
  */
-public class Exercise_Type {
+public class Exercise_Type extends Activity {
     private int exerciseID;
     private String name;
     private double caloriesPerMinute;
