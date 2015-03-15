@@ -6,13 +6,8 @@
 
 package Controllers;
 
-import Models.Exercise_Type;
-import Models.Sustenance;
-import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,8 +19,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Stuart
  */
-@WebServlet(name = "Activity_Management", urlPatterns = {"/Activity_Management"})
-public class Activity_Management extends HttpServlet {
+@WebServlet(name = "Register_Meal", urlPatterns = {"/Register_Meal"})
+public class Register_Meal extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,35 +36,27 @@ public class Activity_Management extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            //Get the current session's user
+            Database database = new Database();
+            
+            //Get the currently logged in user
             HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("loggedInUser");
+            Models.User current = (Models.User) session.getAttribute("loggedInUser");
+            String username = current.getUsername();
             
-            Database db = new Database();
-            //Get the available exercises to choose from
-            ArrayList<Exercise_Type> exercises = db.getAvailableExercises();
-            request.setAttribute("availExercises", exercises);
             
-            //Get the user's exercise history
-            ResultSet exerciseHistory = db.getUserExerciseHistory(currentUser);
-            request.setAttribute("exerciseHistory", exerciseHistory);
+            //Get id of sustenance to add to meal
+            int sustenanceID = Integer.valueOf(request.getParameter("sustenanceID"));
+            //Get type of meal
+            String type = request.getParameter("rMealType");
+            //Get date of meal
+            String date = request.getParameter("rMealDate");
             
-            //Get the available sustenances to choose from
-            ArrayList<Sustenance> sustenances = db.getSustenanceChoices(currentUser.getUsername());
-            request.setAttribute("availSustenances", sustenances);
+            //Register this exercise in the database
+            database.addSustenanceToMeal(username, date, type, sustenanceID);
             
-            //Get the user's meal activity for the current date
-            ResultSet breakfastHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-04-15", "breakfast");
-            ResultSet lunchHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-04-15", "lunch");
-            ResultSet dinnerHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-04-15", "dinner");
-            ResultSet snacksHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-04-15", "snacks");
-            request.setAttribute("breakfastHistory", breakfastHistory);
-            request.setAttribute("lunchHistory", lunchHistory);
-            request.setAttribute("dinnerHistory", dinnerHistory);
-            request.setAttribute("snacksHistory", snacksHistory);
+            //Send user back to their activity management page
+            response.sendRedirect("Activity_Management");
             
-            //Send user to the activity management page
-            request.getRequestDispatcher("activityManagement.jsp").forward(request, response);
         } finally {
             out.close();
         }

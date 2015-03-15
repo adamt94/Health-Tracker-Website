@@ -12,6 +12,8 @@ import javax.servlet.ServletException;
 //Models
 import Models.User;
 import Models.Exercise_Type;
+import Models.Registered_Meal;
+import Models.Sustenance;
 import java.util.ArrayList;
 
 public class Database {
@@ -191,18 +193,128 @@ public class Database {
         try {
             String sql;
             //Get all the user's store exercise information
-            sql = "SELECT * FROM activity \n" +
-                  "INNER JOIN exercise_session ON (activity.\"activityID\" = exercise_session.\"activityID\") \n" +
-                  "INNER JOIN exercise_type ON (exercise_session.\"exerciseID\" = exercise_type.\"exerciseID\")\n" +
-                  "WHERE activity.username = '" + user.getUsername() + "'";
+            sql = "SELECT * FROM activity \n"
+                    + "INNER JOIN exercise_session ON (activity.\"activityID\" = exercise_session.\"activityID\") \n"
+                    + "INNER JOIN exercise_type ON (exercise_session.\"exerciseID\" = exercise_type.\"exerciseID\")\n"
+                    + "WHERE activity.username = '" + user.getUsername() + "'";
             ResultSet rs;
             Database db = new Database();
             rs = db.runQuery(sql, db.getConnection());
             return rs;
         } catch (Exception ex) {
-
+            //There was an error
+            System.out.println("getUserExerciseHistory error: " + ex);
+            return null;
         }
-        return null;//garbage
+    }
+
+    //Get the sustenance options the user can choose from
+    //Takes sustenance defined by SYSTEM and by given username
+    public ArrayList<Sustenance> getSustenanceChoices(String username) {
+        try {
+            String sql;
+            sql = "SELECT * FROM sustenance \n"
+                + "WHERE created_by = 'SYSTEM' OR created_by = '" + username + "'";
+            ResultSet rs;
+            Database db = new Database();
+            rs = db.runQuery(sql, db.getConnection());
+            
+            //For storing all the available exercises
+            ArrayList<Sustenance> sustenances = new ArrayList();
+            
+            //For each found sustenance
+            while(rs.next()){
+                //Get details of sustenance
+                int sustID = rs.getInt("sustenance_id");
+                String name = rs.getString("name");
+                double calories = rs.getDouble("calories");
+                Sustenance s = new Sustenance(sustID, name, calories);
+                
+                //Add this to the list
+                sustenances.add(s);
+            }
+            
+            //Return list
+            return sustenances;
+        } catch (Exception ex) {
+            System.out.println("getSustenanceChoices error: " + ex);
+            return null;
+        }
+    }
+
+    //Get items in given meal
+    //Username of user
+    //Date given in format DD/MM/YY
+    //Type chosen from 'breakfast', 'lunch', 'dinner', 'snacks'
+    public ResultSet getSustenanceInMealType(String username, String date, String type) {
+        try {
+            String sql;
+            sql = "SELECT name, calories\n"
+                    + " FROM sustenance\n"
+                    + " INNER JOIN meal_sustenance ON sustenance.sustenance_id = meal_sustenance.sustenance_id\n"
+                    + " INNER JOIN registered_meal ON meal_sustenance.\"meal_sustenance_ID\" = registered_meal.\"meal_sustenance_ID\"\n"
+                    + " INNER JOIN activity ON registered_meal.\"activityID\" = activity.\"activityID\"\n"
+                    + " WHERE registered_meal.type = '" + type + "'\n"
+                    + " AND activity.date = '" + date + "'\n"
+                    + " AND activity.username = '" + username + "'";
+            ResultSet rs;
+            Database db = new Database();
+            rs = db.runQuery(sql, db.getConnection());
+            return rs;
+        } catch (Exception ex) {
+            //There was an error
+            System.out.println("getSustenanceInMeal error: " + ex);
+            return null;
+        }
+    }
+
+    public void addSustenanceToMeal(String username, String date, String type, int sustenanceID) {
+        try {
+            String sql;
+            //Check for registered meals on given date and of given type belonging to this user
+            sql = "SELECT registered_meal.\"meal_sustenance_ID\"\n"
+                    + " FROM registered_meal\n"
+                    + " INNER JOIN meal_sustenance ON meal_sustenance.\"meal_sustenance_ID\" = registered_meal.\"meal_sustenance_ID\"\n"
+                    + " INNER JOIN activity ON registered_meal.\"activityID\" = activity.\"activityID\"\n"
+                    + " WHERE registered_meal.type = '" + type + "'\n"
+                    + " AND activity.date = '" + date + "'\n"
+                    + " AND activity.username = '" + username + "'";
+            ResultSet rs;
+            Database db = new Database();
+            rs = db.runQuery(sql, db.getConnection());
+
+            //If a meal already exists for this date and type
+            if (rs.first()) {
+                System.out.println("Meal already made for this date and type...");
+                //Add given sustenance to this registered meal's meal_sustenance_ID
+                sql = "INSERT INTO meal_sustenance(\"meal_sustenance_ID\", sustenance_id)\n"
+                        + "VALUES ('" + rs.getString("meal_sustenance_ID") + "','" + sustenanceID + "')";
+                db.runQuery(sql, db.getConnection());
+            } else {
+                //Otherwise if meal does not exist
+
+                //Create entry in activity table for this activity...
+                Registered_Meal newMeal = new Registered_Meal(username, date, type);
+                int activityID = addActivity(newMeal);
+
+                //Create a registered_meal and return the meal sustenance id it creates...
+                sql = "INSERT INTO registered_meal(\"activityID\", type)\n"
+                        + "VALUES('" + activityID + "', '" + type + "')"
+                        + "RETURNING \"meal_sustenance_ID\"";
+                ResultSet result = db.runQuery(sql, db.getConnection());
+                System.out.println("attempting to get meal id");
+                result.first();
+                int mealSustID = result.getInt("meal_sustenance_ID");
+
+                //Add given sustenance to this registered meal using the obtained meal sustenance id...
+                sql = "INSERT INTO meal_sustenance(\"meal_sustenance_ID\", sustenance_id)\n"
+                        + "VALUES ('" + mealSustID + "','" + sustenanceID + "')";
+                db.runUpdateQuery(sql, db.getConnection());
+            }
+        } catch (Exception ex) {
+            //There was an error
+            System.out.println("addSustenanceToMeal error: " + ex);
+        }
     }
 
     //DATABASE ACCESS METHODS BELOW
@@ -214,7 +326,7 @@ public class Database {
             throw new ServletException(String.format("Error: Cannot find JDBC driver..."));
         }
         String username = "postgres"; //Username for database (postgres)
-        String password = "adam"; //Password for database (postgres)
+        String password = "postgres"; //Password for database (postgres)
         String url = "jdbc:postgresql://127.0.0.1/HealthTrackerDatabase"; //Url to connect to database
         Connection connection;
         try {

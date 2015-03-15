@@ -1,8 +1,3 @@
-<%-- 
-    Document   : profile
-    Created on : Feb 26, 2015, 5:08:00 PM
-    Author     : Stuart
---%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

@@ -17,6 +17,12 @@ public class Registered_Meal extends Activity{
     //Default constructor
     public Registered_Meal(){}
     
+    public Registered_Meal(String gUsername, String gDate, String gType){
+        username = gUsername;
+        date = gDate;
+        type = gType;
+    }
+    
     
     public double getFullCalories(){
         //still needs to be implemented

@@ -38,6 +38,7 @@ public class Register_Exercise extends HttpServlet {
         try {
             Database database = new Database();
             
+            //Get the currently logged in user
             HttpSession session = request.getSession();
             Models.User current = (Models.User) session.getAttribute("loggedInUser");
             String username = current.getUsername();
@@ -51,9 +52,14 @@ public class Register_Exercise extends HttpServlet {
             int duration = Integer.valueOf(request.getParameter("duration"));
             int distance = Integer.valueOf(request.getParameter("distance"));
             
+            //Create an exercise activity object from the provided details
             Models.Exercise_Session exercise = new Models.Exercise_Session(username, date, exerciseID, duration, distance);
             
+            //Register this exercise in the database
             database.registerExercise(exercise);
+            
+            //Send user back to their activity management page
+            response.sendRedirect("Activity_Management");
             
         } finally {
             out.close();

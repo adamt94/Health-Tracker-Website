@@ -13,10 +13,15 @@ package Models;
 public class Sustenance extends Activity {
     private int sustenanceID;
     private String name;
-    private int calories;
+    private double calories;
 
-    public Sustenance(int sustenanceID, String name, int calories) {
+    public Sustenance(int sustenanceID, String name, double calories) {
         this.sustenanceID = sustenanceID;
+        this.name = name;
+        this.calories = calories;
+    }
+    
+    public Sustenance(String name, double calories){
         this.name = name;
         this.calories = calories;
     }
@@ -55,7 +60,7 @@ public class Sustenance extends Activity {
     /**
      * @return the calories
      */
-    public int getCalories() {
+    public double getCalories() {
         return calories;
     }
 

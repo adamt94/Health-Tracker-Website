@@ -1,12 +1,6 @@
-<%-- 
-    Document   : activityManagement
-    Created on : Mar 7, 2015, 8:52:58 PM
-    Author     : Stuart
---%>
-
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="Models.Exercise_Type"%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -32,13 +26,13 @@
             Exercise: 
             <select name="exerciseID">
                 <%
-                    ArrayList<Exercise_Type> availExercises = (ArrayList<Exercise_Type>) request.getAttribute("availExercises");
+                    ArrayList<Models.Exercise_Type> availExercises = (ArrayList<Models.Exercise_Type>) request.getAttribute("availExercises");
                     if (availExercises != null) {
 
                         for (Models.Exercise_Type e : availExercises) {%>
                 <option value="<%=e.getExerciseID()%>"><%=e.getName()%></option>
-                <% }//endfor
-                        }//endif%>
+                <%      }//endfor
+                    }//endif%>
             </select>
             <br>
             Duration: <input type="number" name="duration"></input>
@@ -49,14 +43,100 @@
         </form>
 
         <h2>Register Meal</h2>
-        Not yet implemented...
+        <form action="Register_Meal" method="POST">
+            Date: <input type="date" name ="rMealDate"> Type: <select name="rMealType">
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>    
+                <option value="dinner">Dinner</option>
+                <option value="snacks">Snack</option>
+            </select>
+            <br>
+            Meal Item:<select name="sustenanceID">
+                <%
+                    ArrayList<Models.Sustenance> availSustenances = (ArrayList<Models.Sustenance>) request.getAttribute("availSustenances");
+                    if (availSustenances != null) {
+
+                        for (Models.Sustenance s : availSustenances) {%>
+                <option value="<%=s.getSustenanceID()%>"><%=s.getName()%> Calories: <%=s.getCalories()%></option>
+                <%      }//endfor
+                    }//endif%>
+            </select>
+            <br>
+            <input type="submit" value="Add Item to Meal"></input>
+        </form>
         <h2>Register Sleep</h2>
         Not yet implemented...
+        <br>
+
+
         <h1>View History of Activities</h1>
+        <h2>Meal History</h2>
+        <h5>NOTE: ONLY CURRENTLY SHOWS MEALS ON DATE 15/03/2015 FOR TESTING PURPOSES</h5>
+        <%  //Get the result set of exercise history passed from the servlet
+            ResultSet rs = (ResultSet) request.getAttribute("breakfastHistory");%>
+        <TABLE BORDER="1">
+            <caption>Breakfast</caption>
+            <TR>
+                <TH>Name</TH>
+                <TH>Calories</TH>
+            </TR>
+            <% while (rs.next()) {%>
+            <TR>
+                <TD><%= rs.getString("name")%></TD>
+                <TD><%= rs.getDouble("calories")%></TD>
+            </TR>
+            <% }%>
+        </TABLE>
+        <%  //Get the result set of exercise history passed from the servlet
+            rs = (ResultSet) request.getAttribute("lunchHistory");%>
+        <TABLE BORDER="1">
+            <caption>Lunch</caption>
+            <TR>
+                <TH>Name</TH>
+                <TH>Calories</TH>
+            </TR>
+            <% while (rs.next()) {%>
+            <TR>
+                <TD><%= rs.getString("name")%></TD>
+                <TD><%= rs.getDouble("calories")%></TD>
+            </TR>
+            <% }%>
+        </TABLE>
+        <%  //Get the result set of exercise history passed from the servlet
+            rs = (ResultSet) request.getAttribute("dinnerHistory");%>
+        <TABLE BORDER="1">
+            <caption>Dinner</caption>
+            <TR>
+                <TH>Name</TH>
+                <TH>Calories</TH>
+            </TR>
+            <% while (rs.next()) {%>
+            <TR>
+                <TD><%= rs.getString("name")%></TD>
+                <TD><%= rs.getDouble("calories")%></TD>
+            </TR>
+            <% }%>
+        </TABLE>
+        <%  //Get the result set of exercise history passed from the servlet
+            rs = (ResultSet) request.getAttribute("snacksHistory");%>
+        <TABLE BORDER="1">
+            <caption>Breakfast</caption>
+            <TR>
+                <TH>Name</TH>
+                <TH>Calories</TH>
+            </TR>
+            <% while (rs.next()) {%>
+            <TR>
+                <TD><%= rs.getString("name")%></TD>
+                <TD><%= rs.getDouble("calories")%></TD>
+            </TR>
+            <% }%>
+        </TABLE>
         <h2>Exercise History</h2>
         <%  //Get the result set of exercise history passed from the servlet
-            ResultSet rs = (ResultSet) request.getAttribute("exerciseHistory");%>
+            rs = (ResultSet) request.getAttribute("exerciseHistory");%>
         <TABLE BORDER="1">
+            <caption>Exercises Performed</caption>
             <TR>
                 <TH>Exercise</TH>
                 <TH>Duration</TH>
@@ -64,14 +144,16 @@
                 <TH>Calories Per Minute</TH>
                 <TH>Date</TH>
             </TR>
-            <% while(rs.next()){ %>
+            <% while (rs.next()) {%>
             <TR>
-                <TD><%= rs.getString("name") %></TD>
-                <TD><%= rs.getString("duration") %></TD>
-                <TD><%= rs.getString("distance") %></TD>
-                <TD><%= rs.getString("caloriesPerMinute") %></TD>
-                <TD><%= rs.getString("date") %></TD>
+                <TD><%= rs.getString("name")%></TD>
+                <TD><%= rs.getString("duration")%></TD>
+                <TD><%= rs.getString("distance")%></TD>
+                <TD><%= rs.getString("caloriesPerMinute")%></TD>
+                <TD><%= rs.getString("date")%></TD>
             </TR>
-            <% } %>
+            <% }%>
+        </TABLE>
+
     </body>
 </html>
