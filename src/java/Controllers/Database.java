@@ -183,9 +183,9 @@ public class Database {
             return true;
         } catch (Exception ex) {
             System.out.println("registerExercise error: " + ex);
+            //Return false for failure
+            return false;
         }
-        //Return false for failure
-        return false;//garbage
     }
 
     //Get ResultSet of User's exercise history
@@ -314,6 +314,28 @@ public class Database {
         } catch (Exception ex) {
             //There was an error
             System.out.println("addSustenanceToMeal error: " + ex);
+        }
+    }
+    
+    //Create and associate a custom sustenance with a user
+    public boolean addCustomSustenance(Sustenance sustenance){
+        try {
+
+            //Create custom sustenance
+            String sql;
+            sql = "INSERT INTO sustenance(name, calories, created_by)\n" +
+                    "VALUES('"  + sustenance.getName() + 
+                    "','"       + sustenance.getCalories()+ "','" 
+                                + sustenance.getCreatedBy() + "')";
+            Database db = new Database();
+            db.runUpdateQuery(sql, db.getConnection());
+
+            //Return true for success
+            return true;
+        } catch (Exception ex) {
+            System.out.println("addCustomSustenance error: " + ex);
+            //Return false for failure
+            return false;
         }
     }
 

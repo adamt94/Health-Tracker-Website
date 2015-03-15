@@ -14,6 +14,7 @@ public class Sustenance extends Activity {
     private int sustenanceID;
     private String name;
     private double calories;
+    private String created_by;
 
     public Sustenance(int sustenanceID, String name, double calories) {
         this.sustenanceID = sustenanceID;
@@ -71,4 +72,17 @@ public class Sustenance extends Activity {
         this.calories = calories;
     }
     
+    /**
+     * @return the creator of this sustenance
+     */
+    public String getCreatedBy() {
+        return created_by;
+    }
+    
+    /**
+     * @param creator the creator of this sustenance
+     */
+    public void setCreatedBy(String creator){
+        created_by = creator;
+    }
 }

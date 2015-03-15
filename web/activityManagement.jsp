@@ -64,6 +64,13 @@
             <br>
             <input type="submit" value="Add Item to Meal"></input>
         </form>
+            <h4>Add Custom Food/Drink</h4>
+        <form action="AddCustomSustenance" method="POST">
+            Name: <input type="text" name="customName"></input>
+            Calories: <input type="number" name="customCalories"></input>
+            <input type="submit" value="Add Custom Food/Drink"></input>
+        </form>
+            
         <h2>Register Sleep</h2>
         Not yet implemented...
         <br>
