@@ -127,7 +127,7 @@
         <%  //Get the result set of exercise history passed from the servlet
             rs = (ResultSet) request.getAttribute("snacksHistory");%>
         <TABLE BORDER="1">
-            <caption>Breakfast</caption>
+            <caption>Snacks</caption>
             <TR>
                 <TH>Name</TH>
                 <TH>Calories</TH>

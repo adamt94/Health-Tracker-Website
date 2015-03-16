@@ -59,10 +59,10 @@ public class Activity_Management extends HttpServlet {
             request.setAttribute("availSustenances", sustenances);
             
             //Get the user's meal activity for the current date
-            ResultSet breakfastHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-04-15", "breakfast");
-            ResultSet lunchHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-04-15", "lunch");
-            ResultSet dinnerHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-04-15", "dinner");
-            ResultSet snacksHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-04-15", "snacks");
+            ResultSet breakfastHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-03-15", "breakfast");
+            ResultSet lunchHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-03-15", "lunch");
+            ResultSet dinnerHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-03-15", "dinner");
+            ResultSet snacksHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-03-15", "snacks");
             request.setAttribute("breakfastHistory", breakfastHistory);
             request.setAttribute("lunchHistory", lunchHistory);
             request.setAttribute("dinnerHistory", dinnerHistory);
