@@ -1,0 +1,34 @@
+{
+    "universities": [
+        {
+            "university": "Anglia Ruskin"
+        },
+        {
+            "university": "Bath"
+        },
+        {
+            "university": "Birmingham"
+        },
+        {
+            "university": "Brighton"
+        },
+        {
+            "university": "Cambridge"
+        },
+        {
+            "university": "Essex"
+        },
+        {
+            "university": "Newcastle"
+        },
+        {
+            "university": "Nottingham"
+        },
+        {
+            "university": "University of East Anglia"
+        },
+        {
+            "university": "University of Hertfordshire"
+        }
+    ]
+}

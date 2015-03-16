@@ -1,0 +1,623 @@
+@charset "utf-8";
+
+/* 
+    Created on : 30-Mar-2014, 18:24:03
+    Author     : James Vine
+*/
+
+/* CSS Document */
+
+
+
+/********************************************/
+/*              |Main Body                  */
+/********************************************/
+#maincontainer {
+    position:relative;
+    top: 100px;
+    left: 0px;
+    width: 100%;
+    height: 536px;
+    background-color:#999999;
+    text-align: center;
+}
+
+#alumni {
+    position: relative;
+    top: 0px;
+}
+
+#name {
+    position: relative;
+    top: -340px;
+    font-size: 32pt;
+    font-weight: bold;
+    z-index: 1;
+}
+
+#welcome {
+    position: relative;
+    top: -360px;
+    font-size: 28pt;
+    z-index: 1;
+}
+
+
+
+
+/********************************************/
+/*                  General                 */
+/********************************************/
+body {
+    height:100%;
+    width:100%;
+    margin: 0 0 0 0;
+    background-color: #164f7d;
+    color: white;
+    font-family:Trebuchet MS;
+}
+
+a{
+    text-decoration:none;
+    color:#164f7d;
+}
+
+input {	
+    text-decoration:none;
+    color:#164f7d;
+    font-size:12pt;
+}
+
+textarea {
+   font-family: Trebuchet MS;
+   font-size: 12pt;
+   color:#164f7d;
+}
+
+/********************************************/
+/*                  Header                  */
+/********************************************/
+
+#header {
+    opacity: 1;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100px;
+    background-color: white;  
+    font-size: 14pt;
+    font-weight: bold;
+    color: #164f7d;
+}
+
+#logo {
+    position:relative;
+    top:0px;
+    left:0px;
+}
+
+#todays_date {
+    float: right;
+    margin: 20px 15px 0px 0px;
+}
+
+#time_now {
+    margin: -45px 15px 0px 0px;
+    text-align:right;
+}
+
+.vbuffer1 {
+    width: 100%;
+    height: 536px;
+    background-color:#999999;
+}
+
+
+.button-link {
+    background: #666666;
+    color:white;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.3);
+    font-size: 11pt;
+    font-weight: bold;
+    padding-top: 2px;
+}
+
+.button-link:hover {
+    background:#999999;
+}
+
+/********************************************/
+/*              Footer Layout               */
+/********************************************/
+.buffer1 {
+    width: 15%;
+    height: 100px;
+    float: left;
+    margin: 0;
+}
+
+.buffer2 {
+    width: 3%;
+    height: 100px;
+    float: left;
+    margin: 0;
+}
+
+.buffer3 {
+    width: 1%;
+    height: 100px;
+    float: left;
+}
+
+.buffer4 {
+    width: 42%;
+    height: 100px;
+    float: left; 
+}
+
+/********************************************/
+/*               Footer Tabs                */
+/********************************************/
+.tabs {
+    position: absolute;
+    top: 536px;
+    left: 0px;
+    width: 100%;
+    background-color: #164f7d;
+}
+
+span.anchor {
+    position: fixed;
+    display: none;
+}
+
+.panel div {
+    opacity:0;
+    background: white;
+    position: absolute;
+    top: -436px;
+    left: 0px;
+}
+
+
+.panel .tab-link {
+    float: left;
+    opacity:1;
+    width: 15%;
+    text-align: center;
+    text-decoration: none;
+    color:white;
+    box-sizing: border-box;
+    font-size:14pt;
+}
+
+.anchor:target + .panel div {
+    opacity: 1;
+    z-index:20;
+    background: #999999;
+}
+
+.anchor:target + .panel .tab-link {
+    opacity:1;
+}
+
+.tab-link h1 {
+    margin: 0px;
+}
+
+.tab-link img {
+    margin-top: 10px;
+}
+
+
+/********************************************/
+/*                Main Body                 */
+/********************************************/
+.labels1 {
+    height: 436px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.labels1 img {
+    position: absolute;
+    top: -15px;
+    left: 700px;
+    padding: 0;
+    z-index: 1;
+}
+
+.labels1 article {
+    position: relative;
+    top: 20px;
+    left: 100px;
+}
+
+#findf-ul {
+    width: 102px;
+    border-bottom-color: #164f7d;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+#msg-ul {
+    width: 77px;
+    border-bottom-color: #164f7d;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+.profile-ul {
+    width: 62px;
+    border-bottom-color: #164f7d;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+
+#upd-ul {
+    width: 129px;
+    border-bottom-color: #164f7d;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+#findu-ul {
+    width: 128px;
+    border-bottom-color: #164f7d;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+#logout-ul {
+    width: 63px;
+    border-bottom-color: #164f7d;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+
+.labels1 p {
+    width: 20%;
+    min-width: 300px;
+}
+
+.blank {
+    color: #164f7d;
+}
+
+/********************************************/
+/*               Find Friends               */
+/********************************************/
+.labels1 .findfriends {
+    opacity: 0.80;
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    color: #164f7d;
+    background: white;
+    padding: 0px 10px 0px 30px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5), -2px 2px 5px rgba(0,0,0,0.5);
+    -webkit-transition: all 0.6s ease;
+    z-index:1;
+}
+
+.findfriends h3 {
+    margin: 12px 0 5px 0;
+}
+
+.findfriends input {
+    margin: 0 20px 28px 0;
+}
+
+.results {
+    opacity: 1;
+}
+
+#results_img {
+    opacity: 1;
+    position: absolute;
+    top: 30px;
+    left: -300px;
+    float: left;
+}
+
+.results_text {
+    position: relative;
+    top: 20px;
+    left: 700px;
+    z-index: 10;
+}
+
+.button-link2 {
+    padding: 8px 20px 8px 20px;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#164f7d), color-stop(100%,#163249));
+    color:white;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.3);
+    border-radius: 5px;
+    box-shadow: 2px 0 2px rgba(0,0,0,0.1), -2px 0 2px rgba(0,0,0,0.1);
+    opacity:1;
+}
+
+.button-link2:hover {
+    background:#4670A8;
+}
+
+
+/********************************************/
+/*             Invite Friends               */
+/********************************************/
+.labels1 .msgfriends {
+    opacity: 0.80;
+    position: absolute;
+    top: 210px;
+    left: 100px;
+    height: 200px;
+    width: 320px;
+    color: #164f7d;
+    background: white;
+    padding: 0px 10px 0px 30px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5), -2px 2px 5px rgba(0,0,0,0.5);
+    -webkit-transition: all 0.6s ease;
+    z-index:1;
+}
+
+.msgfriends h3 {
+    margin: 12px 0 5px 0;
+}
+
+
+
+/********************************************/
+/*              Roll of honour              */
+/********************************************/
+#uniroll {
+    opacity:1;
+    width:240px;
+    height:188px;
+    padding: 0px 10px 0px 10px;
+    margin-right: 100px;
+    overflow:scroll;
+    overflow-x:hidden;
+    float: left;
+    z-index: 1;
+}
+
+
+/********************************************/
+/*               View Profile               */
+/********************************************/
+.labels1 #myprofilepic {
+    position: relative;
+    top: 10px;
+    left: -700px;
+    float: left;
+}
+
+.mypic {
+    border: solid #cccccc 6px;
+}
+
+.labels1 #myname {
+    position: relative;
+    top: 0px;
+    left: 300px;
+    float: left;
+}
+
+.labels1 #myuni_and_year {
+    top: 95px;
+    left: 300px;
+    float: left;
+}
+
+.labels1 #mycourse {
+    top: 135px;
+    left: 300px;
+}
+
+.labels1 #mystatus {
+    top: 180px;
+    left: 300px;
+    max-width: 300px;
+}
+
+.labels1 #myfriends {
+    position: absolute;
+    top: 115px;
+    left: 730px;
+    width:170px;
+    height:150px;
+    padding: 0px 0px 0px 10px;
+    overflow:scroll;
+    overflow-x:hidden;
+    z-index: 30;
+}
+
+.labels1 #myfriends ul {
+    background-color: transparent;
+}
+
+.labels1 #header2 {
+    position: relative;
+    top: 25px;
+    left:600px;
+    width: 250px;
+    z-index: 30;
+}
+
+
+/********************************************/
+/*              Update Profile              */
+/********************************************/
+.labels1 .update_profile {
+    opacity: 0.80;
+    position: absolute;
+    top: 15px;
+    left: 480px;
+    color: #164f7d;
+    background: white;
+    padding: 0px 10px 0px 30px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5), -2px 2px 5px rgba(0,0,0,0.5);
+    -webkit-transition: all 0.6s ease;
+    z-index: 1;
+}
+
+.update_profile h4, h2 {
+    margin: 10px 0 0 0;
+}
+
+.button-link {
+    padding: 8px 10px 8px 10px;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#164f7d), color-stop(100%,#163249));
+    color:white;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.3);
+    border-radius: 5px;
+    box-shadow: 2px 0 2px rgba(0,0,0,0.1), -2px 0 2px rgba(0,0,0,0.1);
+    opacity:1;
+}
+
+.button-link:hover {
+    background:#4670A8;
+}
+
+.labels1 {
+    clear: both;
+}
+
+#updprofimg {
+    z-index:100;
+    top:20px;
+    left:75px;
+    width:400px;
+}
+
+
+/********************************************/
+/*              Messages Screen             */
+/********************************************/
+
+.folders { 
+    width: 45%;
+    background-color: #bbb; 
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0; 
+    border-radius: 7px; 
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d6d6d6), color-stop(0.4, #c0c0c0), color-stop(1,#a4a4a4)); 
+    margin: 10px 0 16px 0;
+    font-size: 0px;
+}
+.folders li:hover { 
+    background-color: #ddd; 
+}  
+
+.folders li:first-child { 
+    border-left: none; 
+    border-radius: 7px 0 0 7px; 
+}
+
+.folders li { 
+    font-size: 16px; 
+    font-weight: bold; 
+    display: inline-block; 
+    padding: 0.5em 1.5em; 
+    cursor: pointer; 
+    color: #444; 
+    text-shadow: #f7f7f7 0 1px 1px; 
+    border-left: 1px solid #ddd; 
+    border-right: 1px solid #888; 
+}
+
+.folders .selected { 
+    background-color: #164f7d !important; 
+    color: white; 
+    text-shadow:none; 
+    border-right-color: #aaa; 
+    border-left: none; 
+    box-shadow:inset 1px 2px 6px #070707; 
+}    
+
+.mails { 
+    width: 100%; 
+    table-layout:fixed; 
+    border-spacing: 0; 
+}
+
+.mails thead { 
+    background-color: #bbb; 
+    font-weight: bold; 
+    color: #444; 
+    text-shadow: #f7f7f7 0 1px 1px; 
+}
+
+.mails tbody tr:hover { 
+    cursor: pointer; 
+    background-color: #68c !important; 
+    color: White; 
+}
+
+.mails th, .mails td { 
+    text-align:left; 
+    padding: 0.4em 0.3em; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.mails th { 
+    border-left: 1px solid #ddd; 
+    border-right: 1px solid #888; 
+    padding: 0.4em 0 0.3em 0.7em; 
+}    
+
+.mails th:nth-child(1), .mails td:nth-child(1) { 
+    width: 20%; 
+}
+
+.mails th:nth-child(2), .mails td:nth-child(2) { 
+    width: 15%; 
+}
+
+.mails th:nth-child(3), .mails td:nth-child(3) { 
+    width: 45%; 
+}
+
+.mails th:nth-child(4), .mails td:nth-child(4) { 
+    width: 15%; 
+}
+
+.mails th:last-child { 
+    border-right: none 
+}
+
+.mails tr:nth-child(even) { 
+    background-color: #EEE; 
+}
+  
+.viewMail .mailInfo { 
+    background-color: #dae0e8; 
+    padding: 1em 1em 0.5em 1.25em; 
+    border-radius: 1em; 
+}
+
+.viewMail .mailInfo h1 { 
+    margin-top: 0.2em; 
+    font-size: 130%; 
+}
+
+.viewMail .mailInfo label { 
+    color: #777; 
+    font-weight: bold; 
+    min-width: 2.75em; 
+    text-align:right; 
+    display: inline-block; 
+}
+
+.viewMail .message { 
+    padding: 0 1.25em; 
+}
