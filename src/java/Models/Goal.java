@@ -1,31 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package Models;
 
-/**
- *
- * @author Stuart
- */
 public class Goal {
     
     private int Goal_ID;
-    private int user_Name;
+    private String user_name;
+    private String group_name;
     private String description;
-    private int totalWeight;
+    private int targetWeight;
     private String targetDate;
     
     //default constructor
     public Goal(){}
 
-    public Goal(int Goal_ID, int user_Name, String description, String targetDate) {
+    public Goal(int Goal_ID, String group_name,int targetWeight, String description, String targetDate) {
         this.Goal_ID = Goal_ID;
-        this.user_Name = user_Name;
+        this.group_name = group_name;
         this.description = description;
         this.targetDate = targetDate;
+        this.targetWeight = targetWeight;
+    }
+    
+    public Goal(String user_name,int targetWeight, String description, String targetDate) {
+        this.user_name = user_name;
+        this.description = description;
+        this.targetDate = targetDate;
+        this.targetWeight = targetWeight;
+    }
+    
+    public Goal(String user_name,int targetWeight, String description, String targetDate, String group_name) {
+        this.user_name = user_name;
+        this.description = description;
+        this.targetDate = targetDate;
+        this.targetWeight = targetWeight;
+        this.group_name = group_name;
     }
     
     
@@ -47,15 +54,16 @@ public class Goal {
     /**
      * @return the user_Name
      */
-    public int getUser_Name() {
-        return user_Name;
+    public String getGroup_name() {
+        return group_name;
     }
 
     /**
-     * @param user_Name the user_Name to set
+     * @param groupname the group_name to set
+     * 
      */
-    public void setUser_Name(int user_Name) {
-        this.user_Name = user_Name;
+    public void setGroup_name(String groupname) {
+        this.group_name = groupname;
     }
 
     /**
@@ -75,15 +83,15 @@ public class Goal {
     /**
      * @return the totalWeight
      */
-    public int getTotalWeight() {
-        return totalWeight;
+    public int getTargetWeight() {
+        return targetWeight;
     }
 
     /**
-     * @param totalWeight the totalWeight to set
+     * @param targetWeight the totalWeight to set
      */
-    public void setTotalWeight(int totalWeight) {
-        this.totalWeight = totalWeight;
+    public void setTotalWeight(int targetWeight) {
+        this.targetWeight = targetWeight;
     }
 
     /**
@@ -98,6 +106,20 @@ public class Goal {
      */
     public void setTargetDate(String targetDate) {
         this.targetDate = targetDate;
+    }
+
+    /**
+     * @return the user_name
+     */
+    public String getUsername() {
+        return user_name;
+    }
+
+    /**
+     * @param user_name the user_name to set
+     */
+    public void setUsername(String user_name) {
+        this.user_name = user_name;
     }
     
 }

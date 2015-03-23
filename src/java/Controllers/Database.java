@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 //Models
 import Models.User;
 import Models.Exercise_Type;
+import Models.Goal;
 import Models.Group;
 import Models.Membership;
 import Models.Registered_Meal;
@@ -79,8 +80,6 @@ public class Database {
         }
         return aUser;
     }
-    
-    
 
     //Registers a new user into the database
     public void registerUser(User user) {
@@ -218,26 +217,26 @@ public class Database {
         try {
             String sql;
             sql = "SELECT * FROM sustenance \n"
-                + "WHERE created_by = 'SYSTEM' OR created_by = '" + username + "'";
+                    + "WHERE created_by = 'SYSTEM' OR created_by = '" + username + "'";
             ResultSet rs;
             Database db = new Database();
             rs = db.runQuery(sql, db.getConnection());
-            
+
             //For storing all the available exercises
             ArrayList<Sustenance> sustenances = new ArrayList();
-            
+
             //For each found sustenance
-            while(rs.next()){
+            while (rs.next()) {
                 //Get details of sustenance
                 int sustID = rs.getInt("sustenance_id");
                 String name = rs.getString("name");
                 double calories = rs.getDouble("calories");
                 Sustenance s = new Sustenance(sustID, name, calories);
-                
+
                 //Add this to the list
                 sustenances.add(s);
             }
-            
+
             //Return list
             return sustenances;
         } catch (Exception ex) {
@@ -320,17 +319,17 @@ public class Database {
             System.out.println("addSustenanceToMeal error: " + ex);
         }
     }
-    
+
     //Create and associate a custom sustenance with a user
-    public boolean addCustomSustenance(Sustenance sustenance){
+    public boolean addCustomSustenance(Sustenance sustenance) {
         try {
 
             //Create custom sustenance
             String sql;
-            sql = "INSERT INTO sustenance(name, calories, created_by)\n" +
-                    "VALUES('"  + sustenance.getName() + 
-                    "','"       + sustenance.getCalories()+ "','" 
-                                + sustenance.getCreatedBy() + "')";
+            sql = "INSERT INTO sustenance(name, calories, created_by)\n"
+                    + "VALUES('" + sustenance.getName()
+                    + "','" + sustenance.getCalories() + "','"
+                    + sustenance.getCreatedBy() + "')";
             Database db = new Database();
             db.runUpdateQuery(sql, db.getConnection());
 
@@ -342,46 +341,46 @@ public class Database {
             return false;
         }
     }
-    
+
     //Register a new group
-    public boolean registerGroup(Models.Group group){
+    public boolean registerGroup(Models.Group group) {
         try {
             //New entry in group table
-            String sql = "INSERT INTO groups(group_name, admin_user)\n" +
-                         " VALUES('" + group.getGroupName() + "', '" +
-                                       group.getAdmin_User() + "')";            
+            String sql = "INSERT INTO groups(group_name, admin_user)\n"
+                    + " VALUES('" + group.getGroupName() + "', '"
+                    + group.getAdmin_User() + "')";
             Database db = new Database();
             db.runUpdateQuery(sql, db.getConnection());
-            
+
             //Return true for success
-            return true;   
+            return true;
         } catch (Exception ex) {
             System.out.println("registerGroup error: " + ex);
             return false;
         }
     }
-    
+
     //Register a new group membership
-    public boolean registerMembership(Models.Membership membership){
+    public boolean registerMembership(Models.Membership membership) {
         try {
             //Check if this membership already exists
-            String sql = "SELECT * FROM group_membership " +
-                        " WHERE group_name = '" + membership.getGroupName() + "' " +
-                                "AND user_name = '" + membership.getUserName() + "'";
-            
+            String sql = "SELECT * FROM group_membership "
+                    + " WHERE group_name = '" + membership.getGroupName() + "' "
+                    + "AND user_name = '" + membership.getUserName() + "'";
+
             Database db = new Database();
             ResultSet rs = db.runQuery(sql, db.getConnection());
             //If query returns a result
-            if(rs.first()){
+            if (rs.first()) {
                 //Membership already exists so output error
                 throw new Exception("Membership already exists for this group and user...");
             }
-            
+
             //New entry in group membership table
-            sql = "INSERT INTO group_membership(group_name, user_name)\n" + 
-                         " VALUES('" + membership.getGroupName() + "','" +
-                                       membership.getUserName() + "')";
-            
+            sql = "INSERT INTO group_membership(group_name, user_name)\n"
+                    + " VALUES('" + membership.getGroupName() + "','"
+                    + membership.getUserName() + "')";
+
             db.runUpdateQuery(sql, db.getConnection());
             return true;
         } catch (Exception ex) {
@@ -389,35 +388,35 @@ public class Database {
             return false;
         }
     }
-    
+
     //Get a group's details from the group name
-    public Group getGroup(String group_name){
+    public Group getGroup(String group_name) {
         try {
             String sql;
-            sql = "SELECT * FROM groups" +
-                  " WHERE group_name = '" + group_name + "'";
+            sql = "SELECT * FROM groups"
+                    + " WHERE group_name = '" + group_name + "'";
             Database db = new Database();
             ResultSet rs = db.runQuery(sql, db.getConnection());
             String groupname = rs.getString("group_name");
             String admin_user = rs.getString("admin_user");
             Group group = new Group(groupname, admin_user);
             return group;
-        } catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println("getGroup error: " + ex);
             return null;
         }
     }
-    
+
     //Get user's group memberships
-    public ArrayList<Membership> getUserMemberships(String user_name){
+    public ArrayList<Membership> getUserMemberships(String user_name) {
         try {
             String sql;
-            sql = "SELECT * FROM group_membership "+
-                    "WHERE user_name = '" + user_name + "'";
+            sql = "SELECT * FROM group_membership "
+                    + "WHERE user_name = '" + user_name + "'";
             Database db = new Database();
             ResultSet rs = db.runQuery(sql, db.getConnection());
             ArrayList<Membership> memberships = new ArrayList();
-            while(rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt("membership_id");
                 String group_name = rs.getString("group_name");
                 String username = rs.getString("user_name");
@@ -430,17 +429,17 @@ public class Database {
             return null;
         }
     }
-    
+
     //Get created groups
-    public ArrayList<Group> getCreatedGroups(String user_name){
+    public ArrayList<Group> getCreatedGroups(String user_name) {
         try {
             String sql;
-            sql = "SELECT * FROM groups "+
-                    "WHERE admin_user = '" + user_name + "'";
+            sql = "SELECT * FROM groups "
+                    + "WHERE admin_user = '" + user_name + "'";
             Database db = new Database();
             ResultSet rs = db.runQuery(sql, db.getConnection());
             ArrayList<Group> groups = new ArrayList();
-            while(rs.next()){
+            while (rs.next()) {
                 String group_name = rs.getString("group_name");
                 String admin_user = rs.getString("admin_user");
                 Group aGroup = new Group(group_name, admin_user);
@@ -452,33 +451,64 @@ public class Database {
             return null;
         }
     }
-    
+
     //Delete a membership given membership id
-    public boolean deleteMembership(int membershipID){
-         try {
-            String sql;
-            Database database = new Database();
-            sql = "DELETE FROM group_membership\n" +
-                    "WHERE membership_id = '" + membershipID + "'";
-            
-            return database.runUpdateQuery(sql, database.getConnection());
-            
-        } catch (Exception ex) {
-             System.out.println("deleteMembership error: " + ex);
-            return false;           
-        }
-    }
-    
-    //Delete a group given group name
-    public boolean deleteGroup(String group_name){
+    public boolean deleteMembership(int membershipID) {
         try {
             String sql;
-            sql = "DELETE FROM groups " + 
-                    "WHERE group_name = '" + group_name + "'";
+            Database database = new Database();
+            sql = "DELETE FROM group_membership\n"
+                    + "WHERE membership_id = '" + membershipID + "'";
+
+            return database.runUpdateQuery(sql, database.getConnection());
+
+        } catch (Exception ex) {
+            System.out.println("deleteMembership error: " + ex);
+            return false;
+        }
+    }
+
+    //Delete a group given group name
+    public boolean deleteGroup(String group_name) {
+        try {
+            String sql;
+            sql = "DELETE FROM groups "
+                    + "WHERE group_name = '" + group_name + "'";
             Database database = new Database();
             return database.runUpdateQuery(sql, database.getConnection());
-        } catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println("deleteGroup error: " + ex);
+            return false;
+        }
+    }
+
+    //Create a goal
+    public boolean createGoal(Goal e) {
+        String sql;
+        try {
+            //If group name not provided
+            if(e.getGroup_name() == null){
+                sql = "INSERT INTO goal(user_name, description, target_weight, target_date)"
+                    + " VALUES('" + e.getUsername() + "','"
+                    + e.getDescription() + "','"
+                    + e.getTargetWeight() + "','"
+                    + e.getTargetDate() + "')";
+            } else {
+                //Otherwise if group name provided
+                sql = "INSERT INTO goal(user_name, description, target_weight, target_date, group_name)"
+                    + " VALUES('" + e.getUsername() + "','"
+                    + e.getDescription() + "','"
+                    + e.getTargetWeight() + "','"
+                    + e.getTargetDate() + "','"
+                    + e.getGroup_name() + "')";
+            }
+            
+            Database db = new Database();
+            db.runUpdateQuery(sql, db.getConnection());
+            return true;
+        } catch (Exception ex) {
+            System.out.println("createGoal error: " + ex);
+            //failure
             return false;
         }
     }
