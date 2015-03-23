@@ -22,6 +22,7 @@
         <h2>Height: </h2>${loggedInUser.height}m
         <h2>BMI: </h2>${loggedInUser.calculateBMI()}
         <div id="logout"> <p> <a href="editprofile.jsp">Edit Profile</a></p></div>
-        <a href="Activity_Management">Manage Activities</a>
+        <a href="Activity_Management">Manage Activities</a><br>
+        <a href="Group_Management">Manage Groups</a>
     </body>
 </html>

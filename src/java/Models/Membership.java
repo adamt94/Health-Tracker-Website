@@ -23,6 +23,11 @@ public class Membership {
         this.groupName = groupName;
         this.userName = userName;
     }
+    
+    public Membership(String groupName, String userName) {
+        this.groupName = groupName;
+        this.userName = userName;
+    }
 
     /**
      * @return the membershipID

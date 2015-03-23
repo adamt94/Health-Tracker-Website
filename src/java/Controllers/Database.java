@@ -12,6 +12,8 @@ import javax.servlet.ServletException;
 //Models
 import Models.User;
 import Models.Exercise_Type;
+import Models.Group;
+import Models.Membership;
 import Models.Registered_Meal;
 import Models.Sustenance;
 import java.util.ArrayList;
@@ -77,6 +79,8 @@ public class Database {
         }
         return aUser;
     }
+    
+    
 
     //Registers a new user into the database
     public void registerUser(User user) {
@@ -338,6 +342,146 @@ public class Database {
             return false;
         }
     }
+    
+    //Register a new group
+    public boolean registerGroup(Models.Group group){
+        try {
+            //New entry in group table
+            String sql = "INSERT INTO groups(group_name, admin_user)\n" +
+                         " VALUES('" + group.getGroupName() + "', '" +
+                                       group.getAdmin_User() + "')";            
+            Database db = new Database();
+            db.runUpdateQuery(sql, db.getConnection());
+            
+            //Return true for success
+            return true;   
+        } catch (Exception ex) {
+            System.out.println("registerGroup error: " + ex);
+            return false;
+        }
+    }
+    
+    //Register a new group membership
+    public boolean registerMembership(Models.Membership membership){
+        try {
+            //Check if this membership already exists
+            String sql = "SELECT * FROM group_membership " +
+                        " WHERE group_name = '" + membership.getGroupName() + "' " +
+                                "AND user_name = '" + membership.getUserName() + "'";
+            
+            Database db = new Database();
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+            //If query returns a result
+            if(rs.first()){
+                //Membership already exists so output error
+                throw new Exception("Membership already exists for this group and user...");
+            }
+            
+            //New entry in group membership table
+            sql = "INSERT INTO group_membership(group_name, user_name)\n" + 
+                         " VALUES('" + membership.getGroupName() + "','" +
+                                       membership.getUserName() + "')";
+            
+            db.runUpdateQuery(sql, db.getConnection());
+            return true;
+        } catch (Exception ex) {
+            System.out.println("registerMembership error: " + ex);
+            return false;
+        }
+    }
+    
+    //Get a group's details from the group name
+    public Group getGroup(String group_name){
+        try {
+            String sql;
+            sql = "SELECT * FROM groups" +
+                  " WHERE group_name = '" + group_name + "'";
+            Database db = new Database();
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+            String groupname = rs.getString("group_name");
+            String admin_user = rs.getString("admin_user");
+            Group group = new Group(groupname, admin_user);
+            return group;
+        } catch (Exception ex){
+            System.out.println("getGroup error: " + ex);
+            return null;
+        }
+    }
+    
+    //Get user's group memberships
+    public ArrayList<Membership> getUserMemberships(String user_name){
+        try {
+            String sql;
+            sql = "SELECT * FROM group_membership "+
+                    "WHERE user_name = '" + user_name + "'";
+            Database db = new Database();
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+            ArrayList<Membership> memberships = new ArrayList();
+            while(rs.next()){
+                int id = rs.getInt("membership_id");
+                String group_name = rs.getString("group_name");
+                String username = rs.getString("user_name");
+                Membership aMembership = new Membership(id, group_name, username);
+                memberships.add(aMembership);
+            }
+            return memberships;
+        } catch (Exception ex) {
+            System.out.println("getUserMemberships error: " + ex);
+            return null;
+        }
+    }
+    
+    //Get created groups
+    public ArrayList<Group> getCreatedGroups(String user_name){
+        try {
+            String sql;
+            sql = "SELECT * FROM groups "+
+                    "WHERE admin_user = '" + user_name + "'";
+            Database db = new Database();
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+            ArrayList<Group> groups = new ArrayList();
+            while(rs.next()){
+                String group_name = rs.getString("group_name");
+                String admin_user = rs.getString("admin_user");
+                Group aGroup = new Group(group_name, admin_user);
+                groups.add(aGroup);
+            }
+            return groups;
+        } catch (Exception ex) {
+            System.out.println("getCreatedGroups error: " + ex);
+            return null;
+        }
+    }
+    
+    //Delete a membership given membership id
+    public boolean deleteMembership(int membershipID){
+         try {
+            String sql;
+            Database database = new Database();
+            sql = "DELETE FROM group_membership\n" +
+                    "WHERE membership_id = '" + membershipID + "'";
+            
+            return database.runUpdateQuery(sql, database.getConnection());
+            
+        } catch (Exception ex) {
+             System.out.println("deleteMembership error: " + ex);
+            return false;           
+        }
+    }
+    
+    //Delete a group given group name
+    public boolean deleteGroup(String group_name){
+        try {
+            String sql;
+            sql = "DELETE FROM groups " + 
+                    "WHERE group_name = '" + group_name + "'";
+            Database database = new Database();
+            return database.runUpdateQuery(sql, database.getConnection());
+        } catch (Exception ex){
+            System.out.println("deleteGroup error: " + ex);
+            return false;
+        }
+    }
 
     //DATABASE ACCESS METHODS BELOW
     //A method for creating database connection
@@ -347,9 +491,9 @@ public class Database {
         } catch (ClassNotFoundException ex) {
             throw new ServletException(String.format("Error: Cannot find JDBC driver..."));
         }
-        String username = "student"; //Username for database (postgres)
-        String password = "dbpassword"; //Password for database (postgres)
-        String url = "jdbc:postgresql://127.0.0.1/studentdb"; //Url to connect to database
+        String username = "postgres"; //Username for database (postgres)
+        String password = "postgres"; //Password for database (postgres)
+        String url = "jdbc:postgresql://127.0.0.1/HealthTrackerDatabase"; //Url to connect to database
         Connection connection;
         try {
             connection = DriverManager.getConnection(url, username, password);

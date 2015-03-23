@@ -18,6 +18,7 @@
     </div>
 
     <body>
+        <a href="profile.jsp">Return to Profile</a>
         <h1>Registering Activity</h1>
         <h2>Register Exercise</h2>
         Not fully implemented...
@@ -26,6 +27,12 @@
             Exercise: 
             <select name="exerciseID">
                 <%
+
+                    Models.User user2 = (Models.User) session.getAttribute("loggedInUser");
+                    if (user2 == null) {
+                        response.sendRedirect("index.jsp");
+                    }
+                    
                     ArrayList<Models.Exercise_Type> availExercises = (ArrayList<Models.Exercise_Type>) request.getAttribute("availExercises");
                     if (availExercises != null) {
 
@@ -64,13 +71,13 @@
             <br>
             <input type="submit" value="Add Item to Meal"></input>
         </form>
-            <h4>Add Custom Food/Drink</h4>
+        <h4>Add Custom Food/Drink</h4>
         <form action="AddCustomSustenance" method="POST">
             Name: <input type="text" name="customName"></input>
             Calories: <input type="number" name="customCalories"></input>
             <input type="submit" value="Add Custom Food/Drink"></input>
         </form>
-            
+
         <h2>Register Sleep</h2>
         Not yet implemented...
         <br>

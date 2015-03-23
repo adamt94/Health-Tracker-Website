@@ -12,42 +12,43 @@ package Models;
  */
 public class Group  {
     
-    private String name;
-    private String admin_User;
+    private String group_name;
+    private String admin_user;
 
     public Group() {
     }
 
-    public Group(String name) {
-        this.name = name;
+    public Group(String name, String username) {
+        this.group_name = name;
+        this.admin_user = username;
     }
 
     /**
-     * @return the name
+     * @return the group_name
      */
-    public String getName() {
-        return name;
+    public String getGroupName() {
+        return group_name;
     }
 
     /**
      * @param name the name to set
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setGroupName(String name) {
+        this.group_name = name;
     }
 
     /**
-     * @return the admin_User
+     * @return the admin_user
      */
     public String getAdmin_User() {
-        return admin_User;
+        return admin_user;
     }
 
     /**
      * @param admin_User the admin_User to set
      */
     public void setAdmin_User(String admin_User) {
-        this.admin_User = admin_User;
+        this.admin_user = admin_User;
     }
     
     
