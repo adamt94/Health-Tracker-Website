@@ -6,13 +6,13 @@ public class Goal {
     private String user_name;
     private String group_name;
     private String description;
-    private int targetWeight;
+    private double targetWeight;
     private String targetDate;
     
     //default constructor
     public Goal(){}
 
-    public Goal(int Goal_ID, String group_name,int targetWeight, String description, String targetDate) {
+    public Goal(int Goal_ID, String group_name,double targetWeight, String description, String targetDate) {
         this.Goal_ID = Goal_ID;
         this.group_name = group_name;
         this.description = description;
@@ -20,14 +20,14 @@ public class Goal {
         this.targetWeight = targetWeight;
     }
     
-    public Goal(String user_name,int targetWeight, String description, String targetDate) {
+    public Goal(String user_name,double targetWeight, String description, String targetDate) {
         this.user_name = user_name;
         this.description = description;
         this.targetDate = targetDate;
         this.targetWeight = targetWeight;
     }
     
-    public Goal(String user_name,int targetWeight, String description, String targetDate, String group_name) {
+    public Goal(String user_name,double targetWeight, String description, String targetDate, String group_name) {
         this.user_name = user_name;
         this.description = description;
         this.targetDate = targetDate;
@@ -83,14 +83,14 @@ public class Goal {
     /**
      * @return the totalWeight
      */
-    public int getTargetWeight() {
+    public double getTargetWeight() {
         return targetWeight;
     }
 
     /**
      * @param targetWeight the totalWeight to set
      */
-    public void setTotalWeight(int targetWeight) {
+    public void setTotalWeight(double targetWeight) {
         this.targetWeight = targetWeight;
     }
 

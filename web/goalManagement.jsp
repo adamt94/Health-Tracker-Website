@@ -20,26 +20,30 @@
     </div>
 </head>
 <body>
-    <h1>Create A Goal</h1>
-    <form action ="Create_Goal" method="POST">
-        <!--
-        Group Name <br>
-        <input type ="text" name="groupName"/>
-        <br>
-        -->
-        Target Date <br>
-        <input type="date" name="targetDate"/>
-        <br>
-        Description <br>
-        <input type="text" name="description"/>
-        <br>
-        Target Weight <br>
-        <input type="number" name="targetWeight"/>
-        <br>
-        <input type="submit" value="Create Goal">
-    </form>
+    <div id="createGoal">
+        <h1>Create A Goal</h1>
+        <form action ="Create_Goal" method="POST">
+            <!--
+            Group Name <br>
+            <input type ="text" name="groupName"/>
+            <br>
+            -->
+            Target Date <br>
+            <input type="date" name="targetDate"/>
+            <br>
+            Description <br>
+            <input type="text" name="description"/>
+            <br>
+            Target Weight <br>
+            <input type="number" name="targetWeight"/>
+            <br>
+            <input type="submit" value="Create Goal">
+        </form>
+    </div>
 
-    <h1>Goal History</h1>
+    <div id="goalHistory">
+        <h1>Goal History</h1>
+    </div>
 
 
 

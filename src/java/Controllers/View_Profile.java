@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Controllers;
 
+import Models.Goal;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -35,7 +37,29 @@ public class View_Profile extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            request.getRequestDispatcher("profile.jsp").forward(request, response);
+            Database database = new Database();
+
+            //Get the currently logged in user
+            HttpSession session = request.getSession();
+            Models.User current = (Models.User) session.getAttribute("loggedInUser");
+
+            //If the user could not be found
+            if (current == null) {
+                //Send client back to the home page
+                response.sendRedirect("index.jsp");
+            } else {
+                String username = current.getUsername();
+
+                //Get any of the user's upcoming goals
+                System.out.println("attempting to get upcoming goals");
+                ArrayList<Goal> upcomingGoals;
+                upcomingGoals = database.getUpcomingGoals(username);
+                request.setAttribute("upcomingGoals", upcomingGoals);
+
+                //Redirect user to their profile page
+                request.getRequestDispatcher("profile.jsp").forward(request, response);
+            }
+
         } finally {
             out.close();
         }

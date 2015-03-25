@@ -487,22 +487,22 @@ public class Database {
         String sql;
         try {
             //If group name not provided
-            if(e.getGroup_name() == null){
+            if (e.getGroup_name() == null) {
                 sql = "INSERT INTO goal(user_name, description, target_weight, target_date)"
-                    + " VALUES('" + e.getUsername() + "','"
-                    + e.getDescription() + "','"
-                    + e.getTargetWeight() + "','"
-                    + e.getTargetDate() + "')";
+                        + " VALUES('" + e.getUsername() + "','"
+                        + e.getDescription() + "','"
+                        + e.getTargetWeight() + "','"
+                        + e.getTargetDate() + "')";
             } else {
                 //Otherwise if group name provided
                 sql = "INSERT INTO goal(user_name, description, target_weight, target_date, group_name)"
-                    + " VALUES('" + e.getUsername() + "','"
-                    + e.getDescription() + "','"
-                    + e.getTargetWeight() + "','"
-                    + e.getTargetDate() + "','"
-                    + e.getGroup_name() + "')";
+                        + " VALUES('" + e.getUsername() + "','"
+                        + e.getDescription() + "','"
+                        + e.getTargetWeight() + "','"
+                        + e.getTargetDate() + "','"
+                        + e.getGroup_name() + "')";
             }
-            
+
             Database db = new Database();
             db.runUpdateQuery(sql, db.getConnection());
             return true;
@@ -510,6 +510,35 @@ public class Database {
             System.out.println("createGoal error: " + ex);
             //failure
             return false;
+        }
+    }
+
+    //Get all Goals which are set to pass in the next 7 or less days
+    public ArrayList<Goal> getUpcomingGoals(String username) {
+        try {
+            System.out.println("finding goals1111...");
+            String sql;
+            //Get upcoming goals ordered by date ascending
+            sql = "SELECT * FROM goal\n"
+                    + "WHERE user_name = '" + username + "'\n"
+                    + "AND target_date <= now()::date + 7\n"
+                    + "ORDER BY target_date ASC";
+            Database db = new Database();
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+            ArrayList<Goal> goals = new ArrayList();
+            System.out.println("finding goals...");
+            while (rs.next()) {
+                String description = rs.getString("description");
+                double targetWeight = rs.getDouble("target_weight");
+                String targetDate = rs.getString("target_date");
+                //String user_name,int targetWeight, String description, String targetDate
+                Goal aGoal = new Goal(username, targetWeight, description, targetDate);
+                goals.add(aGoal);
+            }
+            return goals;
+        } catch (Exception ex) {
+            System.out.println("getUpcomingGoals error: " + ex);
+            return null;
         }
     }
 

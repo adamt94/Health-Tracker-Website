@@ -53,7 +53,7 @@ public class Log_in extends HttpServlet {
                 session.setAttribute("loggedInUser", loggedInUser);
 
                 //Redirect to the View Profile controller
-                response.sendRedirect("profile.jsp");
+                response.sendRedirect("View_Profile");
             } else {
                 //Otherwise redirect back to index
                 response.sendRedirect("index.jsp");
