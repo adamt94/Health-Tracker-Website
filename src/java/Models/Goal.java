@@ -8,6 +8,7 @@ public class Goal {
     private String description;
     private double targetWeight;
     private String targetDate;
+    private String status;
     
     //default constructor
     public Goal(){}
@@ -33,6 +34,23 @@ public class Goal {
         this.targetDate = targetDate;
         this.targetWeight = targetWeight;
         this.group_name = group_name;
+    }
+    
+    public Goal(String user_name, String status, double targetWeight, String description, String targetDate) {
+        this.user_name = user_name;
+        this.description = description;
+        this.targetDate = targetDate;
+        this.targetWeight = targetWeight;
+        this.status = status;
+    }
+    
+    public Goal(String user_name, String status, double targetWeight, String description, String targetDate, String groupName) {
+        this.user_name = user_name;
+        this.description = description;
+        this.targetDate = targetDate;
+        this.targetWeight = targetWeight;
+        this.status = status;
+        this.group_name = groupName;
     }
     
     
@@ -120,6 +138,20 @@ public class Goal {
      */
     public void setUsername(String user_name) {
         this.user_name = user_name;
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
     
 }

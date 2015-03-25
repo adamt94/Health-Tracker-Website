@@ -3,28 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package Controllers;
 
-import Models.Exercise_Type;
 import Models.Goal;
-import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author adam
+ * @author Stuart
  */
-@WebServlet(name = "Goal_Management", urlPatterns = {"/Goal_Management"})
-public class Goal_Management extends HttpServlet {
+@WebServlet(name = "Update_Goal", urlPatterns = {"/Update_Goal"})
+public class Update_Goal extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,26 +36,26 @@ public class Goal_Management extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            //Get the current session's user
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("loggedInUser");
+            //Grab goal id to modify
+            int goal_id = Integer.valueOf(request.getParameter("eGoalID"));
+            //Grab attributes to modify
+            String description = request.getParameter("eDescription");
+            String target_date = request.getParameter("eTargetDate");
+            double target_weight = Double.valueOf(request.getParameter("eTargetWeight"));
             
+            //Create a goal object from modified details
+            Goal aGoal = new Goal();
+            aGoal.setDescription(description);
+            aGoal.setTargetDate(target_date);
+            aGoal.setTotalWeight(target_weight);
+            aGoal.setGoal_ID(goal_id);
+            
+            //Apply modifications to goal
             Database db = new Database();
+            db.updateGoal(aGoal);
             
-            //Get the user's active goals
-            ArrayList<Goal> activeGoals = db.getStatusGoals(currentUser.getUsername(), "ACTIVE");
-            request.setAttribute("activeGoals", activeGoals);
-            
-            //Get the user's expired goals
-            ArrayList<Goal> expiredGoals = db.getStatusGoals(currentUser.getUsername(), "EXPIRED");
-            request.setAttribute("expiredGoals", expiredGoals);
-            
-            //Get the user's successful goals
-            ArrayList<Goal> successfulGoals = db.getStatusGoals(currentUser.getUsername(), "SUCCESSFUL");
-            request.setAttribute("successfulGoals", successfulGoals);
-            
-            //Send user to the goal management page
-            request.getRequestDispatcher("goalManagement.jsp").forward(request, response);
+            //Send user back to their goal management page
+            response.sendRedirect("Goal_Management");
         } finally {
             out.close();
         }

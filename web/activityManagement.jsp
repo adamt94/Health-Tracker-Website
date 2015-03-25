@@ -18,7 +18,7 @@
     </div>
 
     <body>
-        <a href="profile.jsp">Return to Profile</a>
+        <a href="View_Profile">Return to Profile</a>
         <h1>Registering Activity</h1>
         <h2>Register Exercise</h2>
         Not fully implemented...

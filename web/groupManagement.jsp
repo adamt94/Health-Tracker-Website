@@ -9,7 +9,7 @@
         <title>Group Management</title>
     </head>
     <body>
-        <a href="profile.jsp">Return to Profile</a>
+        <a href="View_Profile">Return to Profile</a>
         <div id="createGroup">
             <h1>Create Group</h1>
             <form action="Register_Group" method="POST">
@@ -41,7 +41,7 @@
                 if (groups != null) {
             %>
 
-            <table>
+            <table border="1">
                 <tr>
                     <th>Group Name</th>
                     <th></th>
@@ -75,7 +75,7 @@
                 if (memberships != null) {
                     for (int i = 0; i < memberships.size(); i++) {
             %>
-            <table>
+            <table border="1">
                 <tr>
                     <th>Group Name</th>
                     <th></th>

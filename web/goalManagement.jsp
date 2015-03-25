@@ -1,9 +1,4 @@
-<%-- 
-    Document   : createGoal
-    Created on : Mar 21, 2015, 11:24:26 AM
-    Author     : adam
---%>
-
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -20,6 +15,7 @@
     </div>
 </head>
 <body>
+    <a href="View_Profile">Return to Profile</a>
     <div id="createGoal">
         <h1>Create A Goal</h1>
         <form action ="Create_Goal" method="POST">
@@ -43,6 +39,105 @@
 
     <div id="goalHistory">
         <h1>Goal History</h1>
+
+        <h4>Active Goals</h4>
+
+        <!--
+        
+                     User can only modify active goals
+        
+        -->
+
+        <%  //Get the user's active goals
+            ArrayList<Models.Goal> activeGoals = (ArrayList<Models.Goal>) request.getAttribute("activeGoals");
+
+            if (activeGoals != null) {
+        %>
+        <table border="1">
+            <tr>
+                <th>Description</th>
+                <th>Target Weight</th>
+                <th>Target Date</th>
+                <th></th>
+            </tr>
+            <%
+                for (Models.Goal g : activeGoals) {
+            %>
+            <form action="Update_Goal" method="POST">
+                <tr>
+                    <input type ="hidden" name ="eGoalID" value ="<%=g.getGoal_ID()%>">
+                    <td><input type="text" name="eDescription" value="<%=g.getDescription()%>"/></td>
+                    <td><input type="number" name="eTargetWeight" value="<%=g.getTargetWeight()%>"/></td>
+                    <td><input type="date" name="eTargetDate" value="<%=g.getTargetDate()%>"/></td>
+                    <td><input type ="submit" value ='Update Goal'/></td>
+                </tr>
+            </form>
+            <%
+                }
+            %>
+        </table>
+        <%
+            }//End if
+        %>
+
+        <h4>Successful Goals</h4>
+
+        <%  //Get the user's successful goals
+            ArrayList<Models.Goal> successfulGoals = (ArrayList<Models.Goal>) request.getAttribute("successfulGoals");
+
+            if (activeGoals != null) {
+        %>
+        <table border="1">
+            <tr>
+                <th>Description</th>
+                <th>Target Weight</th>
+                <th>Target Date</th>
+            </tr>
+            <%
+                for (Models.Goal g : successfulGoals) {
+            %>
+            <tr>
+                <td><%=g.getDescription()%></td>
+                <td><%=g.getTargetWeight()%></td>
+                <td><%=g.getTargetDate()%></td>
+            </tr>
+            <%
+                }
+            %>
+        </table>
+        <%
+            }//End if
+        %>
+
+        <h4>Expired Goals</h4>
+
+        <%  //Get the user's expired goals
+            ArrayList<Models.Goal> expiredGoals = (ArrayList<Models.Goal>) request.getAttribute("expiredGoals");
+
+            if (activeGoals != null) {
+        %>
+        <table border="1">
+            <tr>
+                <th>Description</th>
+                <th>Target Weight</th>
+                <th>Target Date</th>
+            </tr>
+            <%
+                for (Models.Goal g : expiredGoals) {
+            %>
+            <tr>
+                <td><%=g.getDescription()%></td>
+                <td><%=g.getTargetWeight()%></td>
+                <td><%=g.getTargetDate()%></td>
+            </tr>
+            <%
+                }
+            %>
+        </table>
+        <%
+            }//End if
+        %>
+
     </div>
 
 

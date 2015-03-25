@@ -50,8 +50,10 @@ public class View_Profile extends HttpServlet {
             } else {
                 String username = current.getUsername();
 
+                //Update all the user's goals
+                database.updateUserGoals(current);
+                
                 //Get any of the user's upcoming goals
-                System.out.println("attempting to get upcoming goals");
                 ArrayList<Goal> upcomingGoals;
                 upcomingGoals = database.getUpcomingGoals(username);
                 request.setAttribute("upcomingGoals", upcomingGoals);

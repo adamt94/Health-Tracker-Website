@@ -513,20 +513,36 @@ public class Database {
         }
     }
 
+    //Update an existing goal
+    public boolean updateGoal(Goal updated) {
+        try {
+            Database db = new Database();
+            String sql;
+            sql = "UPDATE goal "
+                    + "SET description='" + updated.getDescription() + "', "
+                    +     "target_weight='" + updated.getTargetWeight() + "', "
+                    +     "target_date='" + updated.getTargetDate() + "' "
+                    + "WHERE goal_id = '" + updated.getGoal_ID() + "'";
+            return db.runUpdateQuery(sql, db.getConnection());
+        } catch (Exception ex) {
+            System.out.println("updateGoal error: " + ex);
+            return false;
+        }
+    }
+
     //Get all Goals which are set to pass in the next 7 or less days
     public ArrayList<Goal> getUpcomingGoals(String username) {
         try {
-            System.out.println("finding goals1111...");
             String sql;
-            //Get upcoming goals ordered by date ascending
+            //Get upcoming ACTIVE goals ordered by date ascending
             sql = "SELECT * FROM goal\n"
                     + "WHERE user_name = '" + username + "'\n"
                     + "AND target_date <= now()::date + 7\n"
+                    + "AND status = 'ACTIVE'"
                     + "ORDER BY target_date ASC";
             Database db = new Database();
             ResultSet rs = db.runQuery(sql, db.getConnection());
             ArrayList<Goal> goals = new ArrayList();
-            System.out.println("finding goals...");
             while (rs.next()) {
                 String description = rs.getString("description");
                 double targetWeight = rs.getDouble("target_weight");
@@ -539,6 +555,66 @@ public class Database {
         } catch (Exception ex) {
             System.out.println("getUpcomingGoals error: " + ex);
             return null;
+        }
+    }
+
+    //Get all goals of a given status for this user
+    public ArrayList<Goal> getStatusGoals(String username, String status) {
+        try {
+            String sql;
+            sql = "SELECT * FROM goal\n"
+                    + "WHERE user_name = '" + username + "'\n"
+                    + "AND status = '" + status + "' "
+                    + "ORDER BY target_date DESC";
+            Database db = new Database();
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+            ArrayList<Goal> foundGoals = new ArrayList();
+            while (rs.next()) {
+                String description = rs.getString("description");
+                String targetDate = rs.getString("target_date");
+                double targetWeight = rs.getDouble("target_weight");
+                String groupName = rs.getString("group_name");
+                Goal aGoal = new Goal(username, status, targetWeight, description, targetDate, groupName);
+                aGoal.setGoal_ID(rs.getInt("goal_id"));
+                foundGoals.add(aGoal);
+            }
+            return foundGoals;
+        } catch (Exception ex) {
+            System.out.println("getStatusGoals error: " + ex);
+            return null;
+        }
+    }
+
+    //Update a given user's goals based on their current weight and current date
+    //This method should be run everytime a user logs in
+    public boolean updateUserGoals(User user) {
+        try {
+            String sql;
+            Database db = new Database();
+
+            //Expire any goals which were not met on time
+            sql = "UPDATE goal\n"
+                    + "SET status = 'EXPIRED'\n"
+                    + "WHERE target_date < now()::date\n"
+                    + "AND target_weight < '" + user.getWeight() + "'"
+                    + "AND user_name ='" + user.getUsername() + "'";
+
+            db.runUpdateQuery(sql, db.getConnection());
+
+            //Mark any successful goals as SUCCESSFUL
+            sql = "UPDATE goal\n"
+                    + "SET status = 'SUCCESSFUL'\n"
+                    + "WHERE target_date < now()::date\n"
+                    + "AND target_weight >= '" + user.getWeight() + "'"
+                    + "AND user_name = '" + user.getUsername() + "'";
+
+            db.runUpdateQuery(sql, db.getConnection());
+
+            return true;
+
+        } catch (Exception ex) {
+            System.out.println("updateUserGoals error: " + ex);
+            return false;
         }
     }
 
