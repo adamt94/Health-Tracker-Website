@@ -23,12 +23,6 @@ public class Registered_Meal extends Activity{
         type = gType;
     }
     
-    
-    public double getFullCalories(){
-        //still needs to be implemented
-        return 0;//garbage value
-    }
-    
     //Accessors
     public int getMealSustenanceID(){
         return meal_Sustenance_ID;

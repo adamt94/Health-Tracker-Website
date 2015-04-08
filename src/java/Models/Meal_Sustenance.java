@@ -13,6 +13,7 @@ package Models;
 public class Meal_Sustenance {
     private int meal_Sustenance_ID;
     private int sustenanceID;
+    private double calories_consumed;
     
     //Default constructor
     public Meal_Sustenance(){}
@@ -23,6 +24,9 @@ public class Meal_Sustenance {
     }
     public int getSustenanceID(){
         return sustenanceID;
+    }
+    public double getCaloriesConsumed(){
+        return calories_consumed;
     }
     //Mutators
 }

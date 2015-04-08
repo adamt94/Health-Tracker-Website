@@ -65,6 +65,11 @@ public class Activity_Management extends HttpServlet {
             if (date == null || date.equals("")) {
                 date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
             }
+            //Get calory count of todays meals
+            double caloriesConsumedToday = db.getFullCaloryCount(currentUser.getUsername(), date);
+            request.setAttribute("caloriesConsumedToday", caloriesConsumedToday);
+            
+            //Get individual meal activity
             ResultSet breakfastHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "breakfast");
             ResultSet lunchHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "lunch");
             ResultSet dinnerHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "dinner");

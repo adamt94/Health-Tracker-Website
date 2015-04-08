@@ -13,18 +13,15 @@ package Models;
 public class Sustenance extends Activity {
     private int sustenanceID;
     private String name;
-    private double calories;
     private String created_by;
 
-    public Sustenance(int sustenanceID, String name, double calories) {
+    public Sustenance(int sustenanceID, String name) {
         this.sustenanceID = sustenanceID;
         this.name = name;
-        this.calories = calories;
     }
     
-    public Sustenance(String name, double calories){
+    public Sustenance(String name){
         this.name = name;
-        this.calories = calories;
     }
 
     public Sustenance() {
@@ -56,20 +53,6 @@ public class Sustenance extends Activity {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return the calories
-     */
-    public double getCalories() {
-        return calories;
-    }
-
-    /**
-     * @param calories the calories to set
-     */
-    public void setCalories(int calories) {
-        this.calories = calories;
     }
     
     /**

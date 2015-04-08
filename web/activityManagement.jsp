@@ -64,10 +64,11 @@
                     if (availSustenances != null) {
 
                         for (Models.Sustenance s : availSustenances) {%>
-                <option value="<%=s.getSustenanceID()%>"><%=s.getName()%> Calories: <%=s.getCalories()%></option>
+                <option value="<%=s.getSustenanceID()%>"><%=s.getName()%></option>
                 <%      }//endfor
                     }//endif%>
             </select>
+            Calories Consumed: <input type="text" name="caloriesConsumed"></input>
             <br>
             <input type="submit" value="Add Item to Meal"></input>
         </form>
@@ -78,11 +79,6 @@
             <input type="submit" value="Add Custom Food/Drink"></input>
         </form>
 
-        <h2>Register Sleep</h2>
-        Not yet implemented...
-        <br>
-
-
         <h1>View History of Activities</h1>
         <h2>Meal History</h2>
         <h5>NOTE: DATE 15/03/2015 FOR TESTING PURPOSES</h5>
@@ -90,18 +86,19 @@
             <input type='submit' value='Get Meals for Date'/>
             <input type="date" name="requestedDate" placeholder="date"/> 
         </form>
+        Calories Consumed Today: <%=request.getAttribute("caloriesConsumedToday")%>
         <%  //Get the result set of exercise history passed from the servlet
             ResultSet rs = (ResultSet) request.getAttribute("breakfastHistory");%>
         <TABLE BORDER="1">
             <caption>Breakfast</caption>
             <TR>
                 <TH>Name</TH>
-                <TH>Calories</TH>
+                <TH>Calories Consumed</TH>
             </TR>
             <% while (rs.next()) {%>
             <TR>
                 <TD><%= rs.getString("name")%></TD>
-                <TD><%= rs.getDouble("calories")%></TD>
+                <TD><%= rs.getDouble("calories_consumed")%></TD>
             </TR>
             <% }%>
         </TABLE>
@@ -111,12 +108,12 @@
             <caption>Lunch</caption>
             <TR>
                 <TH>Name</TH>
-                <TH>Calories</TH>
+                <TH>Calories Consumed</TH>
             </TR>
             <% while (rs.next()) {%>
             <TR>
                 <TD><%= rs.getString("name")%></TD>
-                <TD><%= rs.getDouble("calories")%></TD>
+                <TD><%= rs.getDouble("calories_consumed")%></TD>
             </TR>
             <% }%>
         </TABLE>
@@ -126,12 +123,12 @@
             <caption>Dinner</caption>
             <TR>
                 <TH>Name</TH>
-                <TH>Calories</TH>
+                <TH>Calories Consumed</TH>
             </TR>
             <% while (rs.next()) {%>
             <TR>
                 <TD><%= rs.getString("name")%></TD>
-                <TD><%= rs.getDouble("calories")%></TD>
+                <TD><%= rs.getDouble("calories_consumed")%></TD>
             </TR>
             <% }%>
         </TABLE>
@@ -141,12 +138,12 @@
             <caption>Snacks</caption>
             <TR>
                 <TH>Name</TH>
-                <TH>Calories</TH>
+                <TH>Calories Consumed</TH>
             </TR>
             <% while (rs.next()) {%>
             <TR>
                 <TD><%= rs.getString("name")%></TD>
-                <TD><%= rs.getDouble("calories")%></TD>
+                <TD><%= rs.getDouble("calories_consumed")%></TD>
             </TR>
             <% }%>
         </TABLE>

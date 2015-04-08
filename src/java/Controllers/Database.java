@@ -236,8 +236,7 @@ public class Database {
                 //Get details of sustenance
                 int sustID = rs.getInt("sustenance_id");
                 String name = rs.getString("name");
-                double calories = rs.getDouble("calories");
-                Sustenance s = new Sustenance(sustID, name, calories);
+                Sustenance s = new Sustenance(sustID, name);
 
                 //Add this to the list
                 sustenances.add(s);
@@ -251,6 +250,30 @@ public class Database {
         }
     }
 
+    //Get the full calory count of all meals in a day for a given user and date
+    public double getFullCaloryCount(String username, String date) {
+
+        try {
+            String sql;
+            sql = "SELECT * FROM activity\n"
+                    + "INNER JOIN registered_meal ON (registered_meal.\"activityID\" = activity.\"activityID\")\n"
+                    + "INNER JOIN meal_sustenance ON (registered_meal.\"meal_sustenance_ID\" = meal_sustenance.\"meal_sustenance_ID\")\n"
+                    + "WHERE activity.date = '" + date + "'\n"
+                    + "AND activity.username = '" + username + "'";
+            Database db = new Database();
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+            
+            double calorySum = 0;
+            while(rs.next()){
+                calorySum += rs.getDouble("calories_consumed");
+            }
+            return calorySum;
+        } catch (Exception ex) {
+            System.out.println("getFullCaloryCount error: " + ex);
+            return -1;
+        }
+    }
+ 
     //Get items in given meal
     //Username of user
     //Date given in format DD/MM/YY
@@ -258,14 +281,14 @@ public class Database {
     public ResultSet getSustenanceInMealType(String username, String date, String type) {
         try {
             String sql;
-            sql = "SELECT name, calories\n"
-                    + " FROM sustenance\n"
-                    + " INNER JOIN meal_sustenance ON sustenance.sustenance_id = meal_sustenance.sustenance_id\n"
-                    + " INNER JOIN registered_meal ON meal_sustenance.\"meal_sustenance_ID\" = registered_meal.\"meal_sustenance_ID\"\n"
-                    + " INNER JOIN activity ON registered_meal.\"activityID\" = activity.\"activityID\"\n"
-                    + " WHERE registered_meal.type = '" + type + "'\n"
-                    + " AND activity.date = '" + date + "'\n"
-                    + " AND activity.username = '" + username + "'";
+            sql = "SELECT sustenance.name, meal_sustenance.calories_consumed\n"
+                    + "FROM sustenance\n"
+                    + "INNER JOIN meal_sustenance ON sustenance.sustenance_id = meal_sustenance.sustenance_id\n"
+                    + "INNER JOIN registered_meal ON meal_sustenance.\"meal_sustenance_ID\" = registered_meal.\"meal_sustenance_ID\"\n"
+                    + "INNER JOIN activity ON registered_meal.\"activityID\" = activity.\"activityID\"\n"
+                    + "WHERE registered_meal.type = '" + type + "'\n"
+                    + "AND activity.date = '" + date + "'\n"
+                    + "AND activity.username = '" + username + "'";
             ResultSet rs;
             Database db = new Database();
             rs = db.runQuery(sql, db.getConnection());
@@ -277,7 +300,7 @@ public class Database {
         }
     }
 
-    public void addSustenanceToMeal(String username, String date, String type, int sustenanceID) {
+    public void addSustenanceToMeal(String username, String date, String type, int sustenanceID, double caloriesConsumed) {
         try {
             String sql;
             //Check for registered meals on given date and of given type belonging to this user
@@ -296,8 +319,8 @@ public class Database {
             if (rs.first()) {
                 System.out.println("Meal already made for this date and type...");
                 //Add given sustenance to this registered meal's meal_sustenance_ID
-                sql = "INSERT INTO meal_sustenance(\"meal_sustenance_ID\", sustenance_id)\n"
-                        + "VALUES (" + rs.getInt("meal_sustenance_ID") + ",'" + sustenanceID + "')";
+                sql = "INSERT INTO meal_sustenance(\"meal_sustenance_ID\", sustenance_id, calories_consumed)\n"
+                        + "VALUES (" + rs.getInt("meal_sustenance_ID") + ",'" + sustenanceID + "', '" + caloriesConsumed + "')";
                 db.runUpdateQuery(sql, db.getConnection());
             } else {
                 //Otherwise if meal does not exist
@@ -316,8 +339,8 @@ public class Database {
                 int mealSustID = result.getInt("meal_sustenance_ID");
 
                 //Add given sustenance to this registered meal using the obtained meal sustenance id...
-                sql = "INSERT INTO meal_sustenance(\"meal_sustenance_ID\", sustenance_id)\n"
-                        + "VALUES ('" + mealSustID + "','" + sustenanceID + "')";
+                sql = "INSERT INTO meal_sustenance(\"meal_sustenance_ID\", sustenance_id, calories_consumed)\n"
+                        + "VALUES ('" + mealSustID + "','" + sustenanceID + "', '" + caloriesConsumed + "')";
                 db.runUpdateQuery(sql, db.getConnection());
             }
         } catch (Exception ex) {
@@ -332,9 +355,8 @@ public class Database {
 
             //Create custom sustenance
             String sql;
-            sql = "INSERT INTO sustenance(name, calories, created_by)\n"
-                    + "VALUES('" + sustenance.getName()
-                    + "','" + sustenance.getCalories() + "','"
+            sql = "INSERT INTO sustenance(name, created_by)\n"
+                    + "VALUES('" + sustenance.getName() + "','"
                     + sustenance.getCreatedBy() + "')";
             Database db = new Database();
             db.runUpdateQuery(sql, db.getConnection());
@@ -636,10 +658,10 @@ public class Database {
             Database db = new Database();
 
             sql = "SELECT * FROM goal "
-                + "WHERE group_name <> 'SYSTEM' "
-                + "AND user_name = '" + user.getUsername() + "' "
-                + "AND target_date < now()::date "
-                + "AND status = 'ACTIVE' ";
+                    + "WHERE group_name <> 'SYSTEM' "
+                    + "AND user_name = '" + user.getUsername() + "' "
+                    + "AND target_date < now()::date "
+                    + "AND status = 'ACTIVE' ";
 
             ResultSet rs = db.runQuery(sql, db.getConnection());
 
