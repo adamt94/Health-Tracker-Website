@@ -18,6 +18,12 @@ import Models.Membership;
 import Models.Registered_Meal;
 import Models.Sustenance;
 import java.util.ArrayList;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class Database {
 
@@ -407,6 +413,41 @@ public class Database {
         }
     }
 
+    //Get all user's in a given group
+    public ArrayList<User> getGroupMembers(String groupName) {
+        try {
+            String sql;
+            //Select all users belonging to given group name
+            sql = "SELECT DISTINCT users.* from group_membership\n"
+                    + "INNER JOIN users ON (users.user_name = group_membership.user_name)\n"
+                    + "WHERE group_membership.group_name =  '" + groupName + "'";
+
+            //Execute query
+            Database db = new Database();
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+
+            //Store all found users in an arraylist
+            ArrayList<User> users = new ArrayList();
+
+            while (rs.next()) {
+                String user_name = rs.getString("user_name");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                String email = rs.getString("email");
+                double height = rs.getDouble("height");
+                double weight = rs.getDouble("weight");
+                User aUser = new User(user_name, firstName, lastName, email, height, weight);
+                users.add(aUser);
+            }
+
+            //Return found users
+            return users;
+        } catch (Exception ex) {
+            System.out.println("getGroupMembers error: " + ex);
+            return null;
+        }
+    }
+
     //Get user's group memberships
     public ArrayList<Membership> getUserMemberships(String user_name) {
         try {
@@ -520,8 +561,8 @@ public class Database {
             String sql;
             sql = "UPDATE goal "
                     + "SET description='" + updated.getDescription() + "', "
-                    +     "target_weight='" + updated.getTargetWeight() + "', "
-                    +     "target_date='" + updated.getTargetDate() + "' "
+                    + "target_weight='" + updated.getTargetWeight() + "', "
+                    + "target_date='" + updated.getTargetDate() + "' "
                     + "WHERE goal_id = '" + updated.getGoal_ID() + "'";
             return db.runUpdateQuery(sql, db.getConnection());
         } catch (Exception ex) {
@@ -583,6 +624,118 @@ public class Database {
             System.out.println("getStatusGoals error: " + ex);
             return null;
         }
+    }
+
+    //          MUST BE RUN BEFORE updateUserGoals()
+    //Check for any currently marked active group goals which have passed
+    //Then email group with success or failure
+    public boolean checkGroupGoals(User user) {
+
+        try {
+            String sql;
+            Database db = new Database();
+
+            sql = "SELECT * FROM goal "
+                + "WHERE group_name <> 'SYSTEM' "
+                + "AND user_name = '" + user.getUsername() + "' "
+                + "AND target_date < now()::date "
+                + "AND status = 'ACTIVE' ";
+
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+
+            //Connection settings for the Health Tracker's email address
+            //We are using googlemail for now
+            String SMTP_HOST_NAME = "smtp.gmail.com";
+            int SMTP_HOST_PORT = 465;
+            String SMTP_AUTH_USER = "vitplushealth";
+            String SMTP_AUTH_PWD = "vitpassword";
+
+            //Configuring email settings for Googlemail
+            Properties props = new Properties();
+
+            props.put("mail.transport.protocol", "smtps");
+            props.put("mail.smtps.host", SMTP_HOST_NAME);
+            props.put("mail.smtps.auth", "true");
+
+            while (rs.next()) {
+                Session mailSession = Session.getDefaultInstance(props);
+                mailSession.setDebug(true);
+                Transport transport = mailSession.getTransport();
+
+                //Creating message to send
+                MimeMessage message = new MimeMessage(mailSession);
+                message.setSubject("Vit+ Group Goal Notification");
+                String content;
+
+                //If the goal target weight is less than user's current weight
+                if (rs.getDouble("target_weight") < user.getWeight()) {
+                    //Goal was a success
+
+                    //Get all group member's for this group
+                    ArrayList<User> groupMembers = db.getGroupMembers(rs.getString("group_name"));
+
+                    //If group members were found
+                    if (groupMembers != null) {
+                        //For all users founds
+                        for (User aUser : groupMembers) {
+                            //Add this user as a recipient using their email address
+                            message.addRecipient(Message.RecipientType.TO,
+                                    new InternetAddress(aUser.getEmail()));
+                        }
+
+                        content = "<html>"
+                                + "<body>"
+                                + user.getUsername() + ", "
+                                + "User <b>" + user.getFirstName() + " " + user.getLastName() + "</b> "
+                                + "was successful at meeting a group goal for group <b>" + rs.getString("group_name") + "</b>"
+                                + "</body>"
+                                + "</html>";
+
+                        message.setText(content, "utf-8", "html");
+
+                        //Sending message
+                        transport.connect(SMTP_HOST_NAME, SMTP_HOST_PORT, SMTP_AUTH_USER, SMTP_AUTH_PWD);
+                        transport.sendMessage(message,
+                                message.getRecipients(Message.RecipientType.TO));
+                    }
+                } else {
+                    //Goal was a failure
+
+                    ArrayList<User> groupMembers = db.getGroupMembers(rs.getString("group_name"));
+
+                    //If group members were found
+                    if (groupMembers != null) {
+                        //For all users founds
+                        for (User aUser : groupMembers) {
+                            //Add this user as a recipient using their email address
+                            message.addRecipient(Message.RecipientType.TO,
+                                    new InternetAddress(aUser.getEmail()));
+                        }
+
+                        content = "<html>"
+                                + "<body>"
+                                + "User <b>" + user.getFirstName() + " " + user.getLastName() + "</b> "
+                                + "was unsuccessful at meeting a group goal for group <b>" + rs.getString("group_name") + "</b>"
+                                + "</body>"
+                                + "</html>";
+
+                        message.setText(content, "utf-8", "html");
+
+                        //Sending message
+                        transport.connect(SMTP_HOST_NAME, SMTP_HOST_PORT, SMTP_AUTH_USER, SMTP_AUTH_PWD);
+                        transport.sendMessage(message,
+                                message.getRecipients(Message.RecipientType.TO));
+                    }
+                }
+            }
+
+            return true;
+
+        } catch (Exception ex) {
+            System.out.println("checkGroupGoals error: " + ex);
+            return false;
+        }
+
     }
 
     //Update a given user's goals based on their current weight and current date

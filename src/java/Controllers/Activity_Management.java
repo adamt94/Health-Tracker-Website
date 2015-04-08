@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Controllers;
 
 import Models.Exercise_Type;
@@ -12,7 +11,9 @@ import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,30 +45,35 @@ public class Activity_Management extends HttpServlet {
             //Get the current session's user
             HttpSession session = request.getSession();
             User currentUser = (User) session.getAttribute("loggedInUser");
-            
+
             Database db = new Database();
             //Get the available exercises to choose from
             ArrayList<Exercise_Type> exercises = db.getAvailableExercises();
             request.setAttribute("availExercises", exercises);
-            
+
             //Get the user's exercise history
             ResultSet exerciseHistory = db.getUserExerciseHistory(currentUser);
             request.setAttribute("exerciseHistory", exerciseHistory);
-            
+
             //Get the available sustenances to choose from
             ArrayList<Sustenance> sustenances = db.getSustenanceChoices(currentUser.getUsername());
             request.setAttribute("availSustenances", sustenances);
-            
-            //Get the user's meal activity for the current date
-            ResultSet breakfastHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-03-15", "breakfast");
-            ResultSet lunchHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-03-15", "lunch");
-            ResultSet dinnerHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-03-15", "dinner");
-            ResultSet snacksHistory = db.getSustenanceInMealType(currentUser.getUsername(), "2015-03-15", "snacks");
+
+            //Get the user's meal activity for the requested date
+            String date = request.getParameter("requestedDate");
+            //If no requested date found, then get meal activity for current date
+            if (date == null || date.equals("")) {
+                date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+            }
+            ResultSet breakfastHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "breakfast");
+            ResultSet lunchHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "lunch");
+            ResultSet dinnerHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "dinner");
+            ResultSet snacksHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "snacks");
             request.setAttribute("breakfastHistory", breakfastHistory);
             request.setAttribute("lunchHistory", lunchHistory);
             request.setAttribute("dinnerHistory", dinnerHistory);
             request.setAttribute("snacksHistory", snacksHistory);
-            
+
             //Send user to the activity management page
             request.getRequestDispatcher("activityManagement.jsp").forward(request, response);
         } finally {

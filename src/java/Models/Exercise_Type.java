@@ -14,6 +14,8 @@ public class Exercise_Type extends Activity {
     private int exerciseID;
     private String name;
     private double caloriesPerMinute;
+
+   
     
     //Default constructor
     public Exercise_Type(){}
@@ -31,8 +33,16 @@ public class Exercise_Type extends Activity {
     public String getName(){
         return name;
     }
+    
+    public double getCaloriesPerMinute() {
+        return caloriesPerMinute;
+    }
     //Mutators
     public void setName(String name){
         this.name = name;
     }
+     public void setCaloriesPerMinute(double caloriesPerMinute) {
+        this.caloriesPerMinute = caloriesPerMinute;
+    }
+
 }

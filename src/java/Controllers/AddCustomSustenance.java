@@ -47,8 +47,14 @@ public class AddCustomSustenance extends HttpServlet {
             
             //Get name of custom sustenance
             String name = request.getParameter("customName");
+            
             //Get calories of custom sustenance
             double calories = Double.valueOf( request.getParameter("customCalories") );
+            
+            if(name.equals("") || calories <= 0){
+                response.sendRedirect("error.jsp");
+            }
+            
             //Register custom sustenance to current user
             Sustenance s = new Sustenance(name, calories);
             s.setCreatedBy(username);

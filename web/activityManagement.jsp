@@ -85,7 +85,11 @@
 
         <h1>View History of Activities</h1>
         <h2>Meal History</h2>
-        <h5>NOTE: ONLY CURRENTLY SHOWS MEALS ON DATE 15/03/2015 FOR TESTING PURPOSES</h5>
+        <h5>NOTE: DATE 15/03/2015 FOR TESTING PURPOSES</h5>
+        <form action="Activity_Management" method="POST">
+            <input type='submit' value='Get Meals for Date'/>
+            <input type="date" name="requestedDate" placeholder="date"/> 
+        </form>
         <%  //Get the result set of exercise history passed from the servlet
             ResultSet rs = (ResultSet) request.getAttribute("breakfastHistory");%>
         <TABLE BORDER="1">

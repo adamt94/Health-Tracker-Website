@@ -50,6 +50,9 @@ public class View_Profile extends HttpServlet {
             } else {
                 String username = current.getUsername();
 
+                //Check for any expiring/successful group goals 
+                //  (must come before updateUserGoals
+                database.checkGroupGoals(current);
                 //Update all the user's goals
                 database.updateUserGoals(current);
                 
