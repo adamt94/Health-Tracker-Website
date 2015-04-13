@@ -5,6 +5,7 @@
  */
 package Controllers;
 
+import Models.Goal;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -40,6 +41,15 @@ public class Create_Goal extends HttpServlet {
 
             //Create a goal object from the details provided
             Models.Goal goal = new Models.Goal(username, targetWeight, description, targetDate, groupName);
+            
+            //If the user weighs more than the target weight
+            if(current.getWeight() > targetWeight){
+                //set the goal to a LOSS type goal
+                goal.setType(Goal.Type.LOSS);
+            } else {
+                //Otherwise they are trying to gain weight
+                goal.setType(Goal.Type.GAIN);
+            }
 
             //Register the goal to the database
             database.createGoal(goal);

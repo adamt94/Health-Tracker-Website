@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -49,6 +50,18 @@ public class Update_Goal extends HttpServlet {
             aGoal.setTargetDate(target_date);
             aGoal.setTotalWeight(target_weight);
             aGoal.setGoal_ID(goal_id);
+            
+            HttpSession session = request.getSession();
+            Models.User current = (Models.User) session.getAttribute("loggedInUser");
+            
+            //If the user weighs more than the target weight
+            if(current.getWeight() > target_weight){
+                //set the goal to a LOSS type goal
+                aGoal.setType(Goal.Type.LOSS);
+            } else {
+                //Otherwise they are trying to gain weight
+                aGoal.setType(Goal.Type.GAIN);
+            }
             
             //Apply modifications to goal
             Database db = new Database();

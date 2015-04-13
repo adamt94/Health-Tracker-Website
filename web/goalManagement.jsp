@@ -97,6 +97,7 @@
                 <th>Description</th>
                 <th>Target Weight</th>
                 <th>Target Date</th>
+                <th>Type</th>
                 <th></th>
             </tr>
             <%
@@ -108,6 +109,7 @@
                     <td><input type="text" name="eDescription" value="<%=g.getDescription()%>"/></td>
                     <td><input type="number" name="eTargetWeight" value="<%=g.getTargetWeight()%>"/></td>
                     <td><input type="date" name="eTargetDate" value="<%=g.getTargetDate()%>"/></td>
+                    <td><input type="text" value="<%=g.getType()%>" readonly></td>
                     <td><input type ="submit" value ='Update Goal'/></td>
                 </tr>
             </form>
@@ -131,6 +133,7 @@
                 <th>Description</th>
                 <th>Target Weight</th>
                 <th>Target Date</th>
+                <th>Type</th>
             </tr>
             <%
                 for (Models.Goal g : successfulGoals) {
@@ -139,6 +142,7 @@
                 <td><%=g.getDescription()%></td>
                 <td><%=g.getTargetWeight()%></td>
                 <td><%=g.getTargetDate()%></td>
+                <td><%=g.getType()%></td>
             </tr>
             <%
                 }
@@ -161,6 +165,7 @@
                 <th>Description</th>
                 <th>Target Weight</th>
                 <th>Target Date</th>
+                <th>Type</th>
             </tr>
             <%
                 for (Models.Goal g : expiredGoals) {
@@ -169,6 +174,7 @@
                 <td><%=g.getDescription()%></td>
                 <td><%=g.getTargetWeight()%></td>
                 <td><%=g.getTargetDate()%></td>
+                <td><%=g.getType()%></td>
             </tr>
             <%
                 }

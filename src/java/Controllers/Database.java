@@ -4,12 +4,14 @@ import Models.Activity;
 import Models.Exercise_Session;
 import Models.Exercise_Type;
 import Models.Goal;
+import Models.Goal.Type;
 import Models.Group;
 import Models.Membership;
 import Models.Past_Goal;
 import Models.Registered_Meal;
 import Models.Sustenance;
 import Models.User;
+import java.net.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -550,19 +552,21 @@ public class Database {
         try {
             //If group name not provided
             if (e.getGroup_name() == null) {
-                sql = "INSERT INTO goal(user_name, description, target_weight, target_date)"
-                        + " VALUES('" + e.getUsername() + "','"
-                        + e.getDescription() + "','"
-                        + e.getTargetWeight() + "','"
-                        + e.getTargetDate() + "')";
-            } else {
-                //Otherwise if group name provided
-                sql = "INSERT INTO goal(user_name, description, target_weight, target_date, group_name)"
+                sql = "INSERT INTO goal(user_name, description, target_weight, target_date, type)"
                         + " VALUES('" + e.getUsername() + "','"
                         + e.getDescription() + "','"
                         + e.getTargetWeight() + "','"
                         + e.getTargetDate() + "','"
-                        + e.getGroup_name() + "')";
+                        + e.getType() + "')";
+            } else {
+                //Otherwise if group name provided
+                sql = "INSERT INTO goal(user_name, description, target_weight, target_date, group_name, type)"
+                        + " VALUES('" + e.getUsername() + "','"
+                        + e.getDescription() + "','"
+                        + e.getTargetWeight() + "','"
+                        + e.getTargetDate() + "','"
+                        + e.getGroup_name() + "','"
+                        + e.getType() + "')";
             }
 
             Database db = new Database();
@@ -580,18 +584,20 @@ public class Database {
         try {
             Database db = new Database();
             String sql;
+            
             //Get old goal
             sql = "SELECT * FROM goal"
                     + " WHERE goal_id = '" + updated.getGoal_ID() + "'";
             ResultSet rs = db.runQuery(sql, db.getConnection());
-
             rs.first();
+            
             int oldGoalID = rs.getInt("goal_id");
             String username = rs.getString("user_name");
             String oldDesc = rs.getString("description");
             double oldTargWeight = rs.getDouble("target_weight");
             String oldDate = rs.getString("target_date");
             String oldGroup = rs.getString("group_name");
+            
             if (oldGroup == null) {
                 oldGroup = "";
             }
@@ -610,7 +616,8 @@ public class Database {
             sql = "UPDATE goal "
                     + "SET description='" + updated.getDescription() + "', "
                     + "target_weight='" + updated.getTargetWeight() + "', "
-                    + "target_date='" + updated.getTargetDate() + "' "
+                    + "target_date='" + updated.getTargetDate() + "', "
+                    + "type='" + updated.getType() + "' "
                     + "WHERE goal_id = '" + updated.getGoal_ID() + "'";
             return db.runUpdateQuery(sql, db.getConnection());
 
@@ -706,6 +713,7 @@ public class Database {
                 String groupName = rs.getString("group_name");
                 Goal aGoal = new Goal(username, status, targetWeight, description, targetDate, groupName);
                 aGoal.setGoal_ID(rs.getInt("goal_id"));
+                aGoal.setType(Type.valueOf(rs.getString("type")));
                 foundGoals.add(aGoal);
             }
             return foundGoals;
@@ -835,21 +843,39 @@ public class Database {
             Database db = new Database();
 
             //Expire any goals which were not met on time
+            //For weight LOSS type goals
             sql = "UPDATE goal\n"
                     + "SET status = 'EXPIRED'\n"
                     + "WHERE target_date < now()::date\n"
                     + "AND target_weight < '" + user.getWeight() + "'"
-                    + "AND user_name ='" + user.getUsername() + "'";
-
+                    + "AND user_name ='" + user.getUsername() + "'"
+                    + "AND type = 'LOSS'";
             db.runUpdateQuery(sql, db.getConnection());
-
+            //And weight GAIN type goals
+            sql = "UPDATE goal\n"
+                    + "SET status = 'EXPIRED'\n"
+                    + "WHERE target_date < now()::date\n"
+                    + "AND target_weight > '" + user.getWeight() + "' "
+                    + "AND user_name ='" + user.getUsername() + "' "
+                    + "AND type = 'GAIN'";
+            db.runUpdateQuery(sql, db.getConnection());
+            
             //Mark any successful goals as SUCCESSFUL
+            //For weight LOSS type goals
             sql = "UPDATE goal\n"
                     + "SET status = 'SUCCESSFUL'\n"
                     + "WHERE target_date < now()::date\n"
-                    + "AND target_weight >= '" + user.getWeight() + "'"
-                    + "AND user_name = '" + user.getUsername() + "'";
-
+                    + "AND target_weight >= '" + user.getWeight() + "' "
+                    + "AND user_name = '" + user.getUsername() + "' "
+                    + "AND type = 'LOSS'";
+            db.runUpdateQuery(sql, db.getConnection());
+            //And weight GAIN type goals
+            sql = "UPDATE goal\n"
+                    + "SET status = 'SUCCESSFUL'\n"
+                    + "WHERE target_date < now()::date\n"
+                    + "AND target_weight <= '" + user.getWeight() + "' "
+                    + "AND user_name = '" + user.getUsername() + "' "
+                    + "AND type = 'GAIN'";
             db.runUpdateQuery(sql, db.getConnection());
 
             return true;
@@ -868,9 +894,9 @@ public class Database {
         } catch (ClassNotFoundException ex) {
             throw new ServletException(String.format("Error: Cannot find JDBC driver..."));
         }
-        String username = "student"; //Username for database (postgres)
-        String password = "dbpassword"; //Password for database (postgres)
-        String url = "jdbc:postgresql://127.0.0.1/studentdb"; //Url to connect to database
+        String username = "postgres"; //Username for database (postgres)
+        String password = "postgres"; //Password for database (postgres)
+        String url = "jdbc:postgresql://127.0.0.1/HealthTrackerDatabase"; //Url to connect to database
         Connection connection;
         try {
             connection = DriverManager.getConnection(url, username, password);

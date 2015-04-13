@@ -2,6 +2,11 @@ package Models;
 
 public class Goal {
     
+    public enum Type {
+        GAIN, 
+        LOSS
+    }
+    
     private int Goal_ID;
     private String user_name;
     private String group_name;
@@ -9,6 +14,7 @@ public class Goal {
     private double targetWeight;
     private String targetDate;
     private String status;
+    private Type type;
     
     //default constructor
     public Goal(){}
@@ -152,6 +158,13 @@ public class Goal {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    public Type getType(){
+        return type;
+    }
+    public void setType(Type givenType){
+        type = givenType;
     }
     
 }
