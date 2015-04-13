@@ -2,21 +2,19 @@ package Controllers;
 
 import Models.Activity;
 import Models.Exercise_Session;
+import Models.Exercise_Type;
+import Models.Goal;
+import Models.Group;
+import Models.Membership;
+import Models.Past_Goal;
+import Models.Registered_Meal;
+import Models.Sustenance;
+import Models.User;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.servlet.ServletException;
-
-//Models
-import Models.User;
-import Models.Exercise_Type;
-import Models.Goal;
-import Models.Group;
-import Models.Membership;
-import Models.Registered_Meal;
-import Models.Sustenance;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.mail.Message;
@@ -24,6 +22,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletException;
 
 public class Database {
 
@@ -262,9 +261,9 @@ public class Database {
                     + "AND activity.username = '" + username + "'";
             Database db = new Database();
             ResultSet rs = db.runQuery(sql, db.getConnection());
-            
+
             double calorySum = 0;
-            while(rs.next()){
+            while (rs.next()) {
                 calorySum += rs.getDouble("calories_consumed");
             }
             return calorySum;
@@ -273,7 +272,7 @@ public class Database {
             return -1;
         }
     }
- 
+
     //Get items in given meal
     //Username of user
     //Date given in format DD/MM/YY
@@ -581,15 +580,83 @@ public class Database {
         try {
             Database db = new Database();
             String sql;
+            //Get old goal
+            sql = "SELECT * FROM goal"
+                    + " WHERE goal_id = '" + updated.getGoal_ID() + "'";
+            ResultSet rs = db.runQuery(sql, db.getConnection());
+
+            rs.first();
+            int oldGoalID = rs.getInt("goal_id");
+            String username = rs.getString("user_name");
+            String oldDesc = rs.getString("description");
+            double oldTargWeight = rs.getDouble("target_weight");
+            String oldDate = rs.getString("target_date");
+            String oldGroup = rs.getString("group_name");
+            if (oldGroup == null) {
+                oldGroup = "";
+            }
+
+            //Save old goal under history
+            sql = "INSERT INTO past_goal(goal_id, user_name, description, target_weight, target_date, group_name)"
+                    + " VALUES('" + oldGoalID + "','"
+                    + username + "','"
+                    + oldDesc + "','"
+                    + oldTargWeight + "','"
+                    + oldDate + "','"
+                    + oldGroup + "')";
+            db.runUpdateQuery(sql, db.getConnection());
+
+            //Update the current goal
             sql = "UPDATE goal "
                     + "SET description='" + updated.getDescription() + "', "
                     + "target_weight='" + updated.getTargetWeight() + "', "
                     + "target_date='" + updated.getTargetDate() + "' "
                     + "WHERE goal_id = '" + updated.getGoal_ID() + "'";
             return db.runUpdateQuery(sql, db.getConnection());
+
         } catch (Exception ex) {
             System.out.println("updateGoal error: " + ex);
             return false;
+        }
+    }
+
+    public ArrayList<Past_Goal> getGoalHistory(int goalID) {
+        try{
+            String sql;
+            Database db = new Database();
+            ResultSet rs;
+            
+            sql = "SELECT * FROM past_goal "
+                    + "WHERE goal_id = '" + goalID + "'"
+                    + " ORDER BY goal_history_id DESC";
+            
+            rs = db.runQuery(sql, db.getConnection());
+            
+            ArrayList<Past_Goal> goals = new ArrayList();
+            
+            while(rs.next()){
+                //Get attributes
+                int histID = rs.getInt("goal_history_id");
+                int foundGoalID = rs.getInt("goal_id");
+                String username = rs.getString("user_name");
+                String description = rs.getString("description");
+                double target_weight = rs.getDouble("target_weight");
+                String target_date = rs.getString("target_date");
+                String group_name = rs.getString("group_name");
+                
+                //Create a past goal object
+                Past_Goal goal = new Past_Goal(histID, foundGoalID, username, 
+                        description, target_weight, target_date, group_name);
+                
+                //Save it to an arraylist
+                goals.add(goal);
+            }
+            
+            //return arraylist of goal history found
+            return goals;
+        } catch (Exception ex) {
+            System.out.println("getGoalHistory error: " + ex);
+            return null;
         }
     }
 
@@ -801,9 +868,9 @@ public class Database {
         } catch (ClassNotFoundException ex) {
             throw new ServletException(String.format("Error: Cannot find JDBC driver..."));
         }
-        String username = "postgres"; //Username for database (postgres)
-        String password = "postgres"; //Password for database (postgres)
-        String url = "jdbc:postgresql://127.0.0.1/HealthTrackerDatabase"; //Url to connect to database
+        String username = "student"; //Username for database (postgres)
+        String password = "dbpassword"; //Password for database (postgres)
+        String url = "jdbc:postgresql://127.0.0.1/studentdb"; //Url to connect to database
         Connection connection;
         try {
             connection = DriverManager.getConnection(url, username, password);

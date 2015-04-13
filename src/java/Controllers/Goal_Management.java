@@ -7,6 +7,7 @@ package Controllers;
 
 import Models.Exercise_Type;
 import Models.Goal;
+import Models.Past_Goal;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,21 +44,29 @@ public class Goal_Management extends HttpServlet {
             //Get the current session's user
             HttpSession session = request.getSession();
             User currentUser = (User) session.getAttribute("loggedInUser");
-            
+
             Database db = new Database();
-            
+
+            //Get any requested goal history
+            String temp = request.getParameter("requestedGoalID");
+            if (temp != null) {
+                int requestGoalID = Integer.valueOf(temp);
+                ArrayList<Past_Goal> goalHistory = db.getGoalHistory(requestGoalID);
+                request.setAttribute("goalHistory", goalHistory);
+            }
+
             //Get the user's active goals
             ArrayList<Goal> activeGoals = db.getStatusGoals(currentUser.getUsername(), "ACTIVE");
             request.setAttribute("activeGoals", activeGoals);
-            
+
             //Get the user's expired goals
             ArrayList<Goal> expiredGoals = db.getStatusGoals(currentUser.getUsername(), "EXPIRED");
             request.setAttribute("expiredGoals", expiredGoals);
-            
+
             //Get the user's successful goals
             ArrayList<Goal> successfulGoals = db.getStatusGoals(currentUser.getUsername(), "SUCCESSFUL");
             request.setAttribute("successfulGoals", successfulGoals);
-            
+
             //Send user to the goal management page
             request.getRequestDispatcher("goalManagement.jsp").forward(request, response);
         } finally {
