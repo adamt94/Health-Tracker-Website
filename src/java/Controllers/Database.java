@@ -8,6 +8,7 @@ import Models.Goal.Type;
 import Models.Group;
 import Models.Membership;
 import Models.Past_Goal;
+import Models.Past_Weight;
 import Models.Registered_Meal;
 import Models.Sustenance;
 import Models.User;
@@ -115,6 +116,45 @@ public class Database {
             runUpdateQuery(sql, getConnection());
         } catch (ServletException ex) {
             System.out.println("updateUser error: " + ex);
+        }
+    }
+    
+    //Returns true if this user needs to update their weight
+    //Otherwise returns false
+    public boolean checkWeight(String username){
+        try {
+            String sql;
+            //See if the database has a weight entry for the past two weeks
+            //for this user
+            sql = "SELECT * FROM past_weight "
+                    + "WHERE user_name = '" + username + "' "
+                    + "AND date_recorded >= now()::date - 14";
+            ResultSet rs = runQuery(sql, getConnection());
+            
+            //If no entry was found
+            //User requires a new weight entry
+            if(rs.next()){
+                return true;
+            }
+        } catch (Exception ex) {
+            System.out.println("checkWeight error: " + ex);
+            return false;
+        }
+        return false;
+    }
+    
+    //Returns true if success
+    //Else false if error
+    public boolean recordPastWeight(String username, double weight){
+        try {
+            String sql;
+            sql = "INSERT INTO past_weight(user_name, recorded_weight, date_recorded) "
+                + "VALUES ('" + username + "', '" + weight + "', now()::date)";
+            runUpdateQuery(sql, getConnection());
+            return true;
+        } catch (ServletException ex) {
+            System.out.println("recordPastWeight error: " + ex);
+            return false;
         }
     }
 

@@ -47,18 +47,27 @@ public class Update_User_Information extends HttpServlet {
             double weight = Double.valueOf(request.getParameter("eWeight"));
             double height = Double.valueOf(request.getParameter("eHeight"));
             
-            //Update user
+            //Update database details
+            Database database = new Database();
+            
+            //If the user's weight has changed
+            if(weight != loggedInUser.getWeight()){
+                //Record the weight in the Past_Weight table
+                database.recordPastWeight(loggedInUser.getUsername(), weight);
+            }
+            
+            //Modify session user details
             loggedInUser.setFirstName(editedFirst);
             loggedInUser.setLastName(editedLast);
             loggedInUser.setWeight(weight);
             loggedInUser.setHeight(height);
             
-            //Update database details
-            Database database = new Database();
+            //Save user's details to database
             database.updateUser(loggedInUser);
             
             //Send back to profile page
-            response.sendRedirect("profile.jsp");
+            response.sendRedirect("View_Profile");
+            
         } finally {
             out.close();
         }
