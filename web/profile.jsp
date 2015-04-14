@@ -28,8 +28,8 @@
         <div id="logout"> <p> <a href="editprofile.jsp">Edit Profile</a></p></div>
         <a href="Activity_Management">Manage Activities</a><br>
         <a href="Goal_Management">Manage Goals</a><br>
-        <a href="Group_Management">Manage Groups</a>
-        <a href="Create_Group_Goal">Test Email</a>
+        <a href="Group_Management">Manage Groups</a><br>
+        <a href="Get_Advanced_Statistics">Get Advanced Statistics</a>
 
         <!-- This div is where notifications are displayed -->
         <div id="notifications">

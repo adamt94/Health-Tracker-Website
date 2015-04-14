@@ -157,6 +157,33 @@ public class Database {
             return false;
         }
     }
+    
+    //Returns the past weights recorded for a given username
+    public ArrayList<Past_Weight> getPastWeights(String username){
+        try {
+            String sql;
+            sql = "SELECT * FROM past_weight "
+                + "WHERE user_name = '" + username + "' "
+                 + "ORDER BY date_recorded ASC";
+            ResultSet rs = runQuery(sql, getConnection());
+            
+            ArrayList<Past_Weight> pastWeights = new ArrayList();
+            while(rs.next()){
+                int pastID = rs.getInt("weight_history_id");
+                String user = rs.getString("user_name");
+                double recordedWeight = rs.getDouble("recorded_weight");
+                String date = rs.getString("date_recorded");
+               
+                Past_Weight aPastWeight = new Past_Weight(pastID, user, recordedWeight, date);
+                
+                pastWeights.add(aPastWeight);
+            }
+            return pastWeights;
+        } catch (Exception ex) {
+            System.out.println("getPastWeights error: " + ex);
+            return null;
+        }
+    }
 
     //For getting all available exercise types from the database
     public ArrayList<Exercise_Type> getAvailableExercises() {
