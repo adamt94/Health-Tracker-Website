@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Controllers;
 
 import java.io.IOException;
@@ -34,15 +33,13 @@ public class Log_out extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
         try {
             //Acquire the current session and invalidate it
             HttpSession session = request.getSession();
             session.invalidate();
             //Redirect user to index page
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            response.sendRedirect("index.jsp");
         } finally {
-            out.close();
         }
     }
 

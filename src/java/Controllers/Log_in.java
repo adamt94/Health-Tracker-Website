@@ -21,6 +21,13 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "Log_in", urlPatterns = {"/Log_in"})
 public class Log_in extends HttpServlet {
+    
+    Database database = new Database();
+    
+    //Created for Unit testing purposes
+    public void setDatabase(Database given){
+        database = given;
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,8 +41,6 @@ public class Log_in extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Database database = new Database();
-        PrintWriter out = response.getWriter();
         try {
 
             //create a new session
@@ -59,7 +64,6 @@ public class Log_in extends HttpServlet {
                 response.sendRedirect("index.jsp");
             }
         } finally {
-            out.close();
         }
     }
 
