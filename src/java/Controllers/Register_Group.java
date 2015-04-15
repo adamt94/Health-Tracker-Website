@@ -9,6 +9,8 @@ package Controllers;
 import Models.Group;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,6 +45,10 @@ public class Register_Group extends HttpServlet {
             HttpSession session = request.getSession();
             Models.User current = (Models.User) session.getAttribute("loggedInUser");
             
+            if(current == null){
+                throw new Exception("No logged in user...");
+            }
+            
             String group_name = request.getParameter("rGroupName");
             
             //Create a new group object from these details
@@ -53,6 +59,9 @@ public class Register_Group extends HttpServlet {
             
             //Send user back to their group management page
             response.sendRedirect("Group_Management");
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

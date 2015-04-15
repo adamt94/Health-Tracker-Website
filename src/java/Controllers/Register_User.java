@@ -8,6 +8,8 @@ package Controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,10 +42,7 @@ public class Register_User extends HttpServlet {
             
             //If a user with this username already exists in the database
             if(database.getUser(givenUsername) != null){
-                //send the user to an error details page
-                //NOT IMPLEMENTED SO FAR NOW JUST REDIRECT TO INDEX.JSP
-                System.out.println("Register_User error: user already found");
-                response.sendError(400, "User already exists");
+                throw new Exception("User with this username already exists...");
             } else {
                 //Otherwise the username is free and the user can be made
                 Models.User newUser = new Models.User(givenUsername, givenPass, 
@@ -52,10 +51,12 @@ public class Register_User extends HttpServlet {
                 //Register the user to the database
                 database.registerUser(newUser);
                 
-                //For now just redirect to index page BUT SHOULD GO TO REGISTRATION SUCCESS PAGE
-                System.out.println("success redirect");
+                //redirect to index page
                 response.sendRedirect("index.jsp");
             }
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

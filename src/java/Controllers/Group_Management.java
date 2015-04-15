@@ -13,6 +13,8 @@ import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,6 +47,10 @@ public class Group_Management extends HttpServlet {
             HttpSession session = request.getSession();
             User currentUser = (User) session.getAttribute("loggedInUser");
             
+            if(currentUser == null){
+                throw new Exception("No logged in user...");
+            }
+            
             Database db = new Database();
             
             //Get the groups created by this user
@@ -57,6 +63,9 @@ public class Group_Management extends HttpServlet {
             
             //Send user to the group management page
             request.getRequestDispatcher("groupManagement.jsp").forward(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

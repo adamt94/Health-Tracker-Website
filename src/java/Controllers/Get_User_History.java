@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,6 +45,10 @@ public class Get_User_History extends HttpServlet {
             //Get the current session's user
             HttpSession session = request.getSession();
             User currentUser = (User) session.getAttribute("loggedInUser");
+            
+            if(currentUser == null){
+                throw new Exception("No logged in user...");
+            }
 
             Database db = new Database();
             
@@ -75,6 +81,9 @@ public class Get_User_History extends HttpServlet {
             
             //Send user to the user history page
             request.getRequestDispatcher("history.jsp").forward(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

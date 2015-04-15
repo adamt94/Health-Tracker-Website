@@ -10,6 +10,8 @@ import Models.Group;
 import Models.Membership;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,16 +46,26 @@ public class Join_Group extends HttpServlet {
             HttpSession session = request.getSession();
             Models.User current = (Models.User) session.getAttribute("loggedInUser");
             
+            if(current == null){
+                throw new Exception("No logged in user...");
+            }
+            
             String group_name = request.getParameter("jGroupName");
             
             //Create a new group object from these details
             Membership newMembership = new Membership(group_name, current.getUsername());
             
             //Register this group to the database
-            database.registerMembership(newMembership);
+            
+            if(!database.registerMembership(newMembership)){
+                throw new Exception("Failed to register membership...");
+            }
             
             //Send user back to their group management page
             response.sendRedirect("Group_Management");
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +28,6 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "Goal_Management", urlPatterns = {"/Goal_Management"})
 public class Goal_Management extends HttpServlet {
-
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,6 +45,10 @@ public class Goal_Management extends HttpServlet {
             //Get the current session's user
             HttpSession session = request.getSession();
             User currentUser = (User) session.getAttribute("loggedInUser");
+            
+            if(currentUser == null){
+                throw new Exception("No logged in user...");
+            }
 
             Database db = new Database();
 
@@ -69,6 +74,9 @@ public class Goal_Management extends HttpServlet {
 
             //Send user to the goal management page
             request.getRequestDispatcher("goal.jsp").forward(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

@@ -9,6 +9,8 @@ package Controllers;
 import Models.Goal;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -54,6 +56,10 @@ public class Update_Goal extends HttpServlet {
             HttpSession session = request.getSession();
             Models.User current = (Models.User) session.getAttribute("loggedInUser");
             
+            if(current == null){
+                throw new Exception("No logged in user...");
+            }
+            
             //If the user weighs more than the target weight
             if(current.getWeight() > target_weight){
                 //set the goal to a LOSS type goal
@@ -69,6 +75,9 @@ public class Update_Goal extends HttpServlet {
             
             //Send user back to their goal management page
             response.sendRedirect("Goal_Management");
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

@@ -91,7 +91,8 @@ public class New_Group_Invitation extends HttpServlet {
             response.sendRedirect("Group_Management");
 
         } catch (MessagingException ex) {
-            Logger.getLogger(Create_Group_Goal.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         }
     }
 

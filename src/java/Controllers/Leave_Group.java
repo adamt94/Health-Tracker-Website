@@ -9,6 +9,8 @@ package Controllers;
 import Models.Membership;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -42,10 +44,16 @@ public class Leave_Group extends HttpServlet {
             int membershipIDToDelete = Integer.valueOf(request.getParameter("dMembershipID"));
             
             //Delete membership from database
-            database.deleteMembership(membershipIDToDelete);
+            if(!database.deleteMembership(membershipIDToDelete)){
+                throw new Exception("Failed to delete membership...");
+            }
             
             //Send user back to their group management page
             response.sendRedirect("Group_Management");
+            
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

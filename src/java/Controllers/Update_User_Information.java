@@ -9,6 +9,8 @@ package Controllers;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +42,10 @@ public class Update_User_Information extends HttpServlet {
             HttpSession session = request.getSession();
             //Get logged in user from current session
             User loggedInUser = (User) session.getAttribute("loggedInUser");
+            
+            if(loggedInUser == null){
+                throw new Exception("No logged in user...");
+            }
             
             //Grab modifed attributes
             String editedFirst = request.getParameter("eFirstName");
@@ -75,6 +81,9 @@ public class Update_User_Information extends HttpServlet {
             //Send back to profile page
             response.sendRedirect("View_Profile");
             
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

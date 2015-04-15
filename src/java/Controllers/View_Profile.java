@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,9 +48,8 @@ public class View_Profile extends HttpServlet {
             Models.User current = (Models.User) session.getAttribute("loggedInUser");
 
             //If the user could not be found
-            if (current == null) {
-                //Send client back to the home page
-                response.sendRedirect("index.jsp");
+            if(current == null){
+                throw new Exception("No logged in user...");
             } else {
                 String username = current.getUsername();
 
@@ -83,6 +84,9 @@ public class View_Profile extends HttpServlet {
                 request.getRequestDispatcher("profile.jsp").forward(request, response);
             }
 
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
             out.close();
         }

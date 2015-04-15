@@ -477,6 +477,17 @@ public class Database {
                 //Membership already exists so output error
                 throw new Exception("Membership already exists for this group and user...");
             }
+            
+            //Check to see if the user is the creator of the group
+            sql = "SELECT * FROM groups "
+                   + " WHERE group_name = '" + membership.getGroupName() + "' "
+                    + "AND admin_user = '" + membership.getUserName() + "'";
+            rs = db.runQuery(sql, db.getConnection());
+            //If query returns a result
+            if (rs.first()) {
+                //Membership already exists so output error
+                throw new Exception("Group creator can't register a membership...");
+            }
 
             //New entry in group membership table
             sql = "INSERT INTO group_membership(group_name, user_name)\n"

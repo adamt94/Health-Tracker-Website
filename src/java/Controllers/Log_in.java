@@ -52,7 +52,6 @@ public class Log_in extends HttpServlet {
             //validate the user
             //If valid user
             if (database.validateUser(aUserName, aPassword)) {
-                System.out.println("valid user...");//FOR TESTING
                 //construct a new user
                 User loggedInUser = database.getUser(aUserName);
                 session.setAttribute("loggedInUser", loggedInUser);
