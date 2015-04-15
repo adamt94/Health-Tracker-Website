@@ -47,40 +47,17 @@ public class Activity_Management extends HttpServlet {
             User currentUser = (User) session.getAttribute("loggedInUser");
 
             Database db = new Database();
+            
             //Get the available exercises to choose from
             ArrayList<Exercise_Type> exercises = db.getAvailableExercises();
             request.setAttribute("availExercises", exercises);
-
-            //Get the user's exercise history
-            ResultSet exerciseHistory = db.getUserExerciseHistory(currentUser);
-            request.setAttribute("exerciseHistory", exerciseHistory);
 
             //Get the available sustenances to choose from
             ArrayList<Sustenance> sustenances = db.getSustenanceChoices(currentUser.getUsername());
             request.setAttribute("availSustenances", sustenances);
 
-            //Get the user's meal activity for the requested date
-            String date = request.getParameter("requestedDate");
-            //If no requested date found, then get meal activity for current date
-            if (date == null || date.equals("")) {
-                date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
-            }
-            //Get calory count of todays meals
-            double caloriesConsumedToday = db.getFullCaloryCount(currentUser.getUsername(), date);
-            request.setAttribute("caloriesConsumedToday", caloriesConsumedToday);
-            
-            //Get individual meal activity
-            ResultSet breakfastHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "breakfast");
-            ResultSet lunchHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "lunch");
-            ResultSet dinnerHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "dinner");
-            ResultSet snacksHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "snacks");
-            request.setAttribute("breakfastHistory", breakfastHistory);
-            request.setAttribute("lunchHistory", lunchHistory);
-            request.setAttribute("dinnerHistory", dinnerHistory);
-            request.setAttribute("snacksHistory", snacksHistory);
-
-            //Send user to the activity management page
-            request.getRequestDispatcher("activityManagement.jsp").forward(request, response);
+            //Send user to the register activity page
+            request.getRequestDispatcher("activity.jsp").forward(request, response);
         } finally {
             out.close();
         }

@@ -78,7 +78,10 @@ public class Database {
             String email = rs.getString("email");
             double weight = rs.getDouble("weight");
             double height = rs.getDouble("height");
-            aUser = new User(username, password, firstName, lastName, email, weight, height);
+            int age = rs.getInt("age");
+            String activeLevel = rs.getString("activeLevel");
+            String gender = rs.getString("gender");
+            aUser = new User(username, password, firstName, lastName, email, weight, height,age,gender,activeLevel);
         } catch (ServletException ex) {
             System.out.println("getUser error:" + ex);
             return null;
@@ -92,10 +95,10 @@ public class Database {
     //Registers a new user into the database
     public void registerUser(User user) {
         String sql;
-        sql = "INSERT INTO users(user_name, password,\"firstName\", \"lastName\", email, weight, height) "
+        sql = "INSERT INTO users(user_name, password,\"firstName\", \"lastName\", email, weight,\"activeLevel\",gender,age, height) "
                 + "VALUES('" + user.getUsername() + "', '" + user.getPassword() + "', '"
                 + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getEmail() + "', '"
-                + user.getWeight() + "', '" + user.getHeight() + "');";
+                + user.getWeight() + "', '" +user.getActiveLevel()+"', '"+user.getGender()+"', '"+user.getAge()+"', '"+ user.getHeight() + "');";
         try {
             runUpdateQuery(sql, getConnection());
         } catch (ServletException ex) {
@@ -111,6 +114,9 @@ public class Database {
                     + "', \"lastName\"='" + user.getLastName()
                     + "', email='" + user.getEmail()
                     + "', weight='" + user.getWeight()
+                      + "', age='" + user.getAge()
+                      + "', gender='" + user.getGender()
+                     + "', \"activeLevel\"='" + user.getActiveLevel()
                     + "', height='" + user.getHeight() + "'\n"
                     + "WHERE user_name = '" + user.getUsername() + "';";
             runUpdateQuery(sql, getConnection());

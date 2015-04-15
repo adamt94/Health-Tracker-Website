@@ -9,6 +9,9 @@ package Controllers;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,8 +23,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Stuart
  */
-@WebServlet(name = "Update_User_Information", urlPatterns = {"/Update_User_Information"})
-public class Update_User_Information extends HttpServlet {
+@WebServlet(name = "Get_User_History", urlPatterns = {"/Get_User_History"})
+public class Get_User_History extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,44 +40,41 @@ public class Update_User_Information extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
+            //Get the current session's user
             HttpSession session = request.getSession();
-            //Get logged in user from current session
-            User loggedInUser = (User) session.getAttribute("loggedInUser");
+            User currentUser = (User) session.getAttribute("loggedInUser");
+
+            Database db = new Database();
             
-            //Grab modifed attributes
-            String editedFirst = request.getParameter("eFirstName");
-            String editedLast = request.getParameter("eLastName");
-            double weight = Double.valueOf(request.getParameter("eWeight"));
-            double height = Double.valueOf(request.getParameter("eHeight"));
+            //Get calory count of todays meals
+            String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+            double caloriesConsumedToday = db.getFullCaloryCount(currentUser.getUsername(), date);
+            request.setAttribute("caloriesConsumedToday", caloriesConsumedToday);
             
-            //Update database details
-            Database database = new Database();
+            //Get the user's meal activity for the requested date
+            date = request.getParameter("requestedDate");
             
-            //If the user's weight has changed
-            if(weight != loggedInUser.getWeight()){
-                //Record the weight in the Past_Weight table
-                database.recordPastWeight(loggedInUser.getUsername(), weight);
+            //If no requested date found, then get meal activity for current date
+            if (date == null || date.equals("")) {
+                date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
             }
             
-            //Modify session user details
-            int editedage = Integer.valueOf(request.getParameter("eAge"));
-            String editedactiveLevel = request.getParameter("eActiveLevel");
-            String editedgender = request.getParameter("eGender");
-            //Update user
-            loggedInUser.setFirstName(editedFirst);
-            loggedInUser.setLastName(editedLast);
-            loggedInUser.setWeight(weight);
-            loggedInUser.setHeight(height);
-            loggedInUser.setActiveLevel(editedactiveLevel);
-            loggedInUser.setAge(editedage);
-            loggedInUser.setGender(editedgender);
-            //Update database details
-       
-            database.updateUser(loggedInUser);
+            //Get individual meal activity
+            ResultSet breakfastHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "breakfast");
+            ResultSet lunchHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "lunch");
+            ResultSet dinnerHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "dinner");
+            ResultSet snacksHistory = db.getSustenanceInMealType(currentUser.getUsername(), date, "snacks");
+            request.setAttribute("breakfastHistory", breakfastHistory);
+            request.setAttribute("lunchHistory", lunchHistory);
+            request.setAttribute("dinnerHistory", dinnerHistory);
+            request.setAttribute("snacksHistory", snacksHistory);
             
-            //Send back to profile page
-            response.sendRedirect("View_Profile");
+            //Get the user's exercise history
+            ResultSet exerciseHistory = db.getUserExerciseHistory(currentUser);
+            request.setAttribute("exerciseHistory", exerciseHistory);
             
+            //Send user to the user history page
+            request.getRequestDispatcher("history.jsp").forward(request, response);
         } finally {
             out.close();
         }

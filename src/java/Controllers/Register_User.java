@@ -34,6 +34,9 @@ public class Register_User extends HttpServlet {
             String gEmail = request.getParameter("rEmail");
             double gHeight = Double.valueOf(request.getParameter("rHeight"));
             double gWeight = Double.valueOf(request.getParameter("rWeight"));
+            String ggender = request.getParameter("rGender");
+            String gactiveLevel = request.getParameter("rActiveLevel");
+            int gage = Integer.valueOf(request.getParameter("rAge")); 
             
             //If a user with this username already exists in the database
             if(database.getUser(givenUsername) != null){
@@ -44,7 +47,7 @@ public class Register_User extends HttpServlet {
             } else {
                 //Otherwise the username is free and the user can be made
                 Models.User newUser = new Models.User(givenUsername, givenPass, 
-                        givenFName, givenLName, gEmail, gWeight, gHeight);
+                        givenFName, givenLName, gEmail, gWeight, gHeight,gage,ggender,gactiveLevel);
                 
                 //Register the user to the database
                 database.registerUser(newUser);

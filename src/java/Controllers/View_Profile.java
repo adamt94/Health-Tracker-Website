@@ -8,7 +8,9 @@ package Controllers;
 import Models.Goal;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -55,18 +57,27 @@ public class View_Profile extends HttpServlet {
                 database.checkGroupGoals(current);
                 //Update all the user's goals
                 database.updateUserGoals(current);
-                
+
                 //Get any of the user's upcoming goals
                 ArrayList<Goal> upcomingGoals;
                 upcomingGoals = database.getUpcomingGoals(username);
                 request.setAttribute("upcomingGoals", upcomingGoals);
-                
+
                 //Check if the user requires a new weight record
                 boolean checkRequired = false;
-                if(database.checkWeight(username)){
+                if (database.checkWeight(username)) {
                     checkRequired = true;
                 }
                 request.setAttribute("checkRequired", checkRequired);
+
+                //Get calories left for user to consume to meet their recommended count
+                String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+                double caloriesConsumedToday = database.getFullCaloryCount(username, date);
+                double caloriesLeft = current.recommendedCalorieIntake() - caloriesConsumedToday;
+                
+                request.setAttribute("caloriesLeftToday", caloriesLeft);
+                
+                
 
                 //Redirect user to their profile page
                 request.getRequestDispatcher("profile.jsp").forward(request, response);

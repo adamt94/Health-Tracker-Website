@@ -8,6 +8,7 @@ var myApp = (function(myApp) {
         self.date = ko.observable();
         self.friend = ko.observableArray([]);
         self.username = ko.observable();
+        self.userName = ko.observable();
         self.password = ko.observable();
         self.full_name = ko.observable();
         self.years = ko.observable();
@@ -45,7 +46,7 @@ var myApp = (function(myApp) {
 
 myApp.getFriendData = function() {
 
-        var url = "http://localhost:8084/Alumni_JV1/services/friends.json?username=" + myApp.vm.username();
+        var url = "http://localhost:8084/Health%20Tracker/services/friends.json?userName=" + myApp.vm.userName();
     console.log(url);
     $.getJSON(url, function(data) {
 
@@ -57,7 +58,7 @@ myApp.getFriendData = function() {
 
 myApp.viewProfile = function() {
 
-    var url = "http://localhost:8084/Alumni_JV1/services/student.json?username=" + myApp.vm.username();
+    var url = "http://localhost:8084/Health%20Tracker/services/student.json?username=" + myApp.vm.username();
     console.log(url);
     $.getJSON(url, function(data) {
         var e = "-";
@@ -79,7 +80,7 @@ myApp.viewProfile = function() {
 
 myApp.fillProfileForm = function() {
 
-    var url = "http://localhost:8084/Alumni_JV1/services/student.json?username=" + myApp.vm.username();
+    var url = "http://localhost:8084/Health%20Tracker/services/student.json?userName=" + myApp.vm.userName();
     console.log(url);
     $.getJSON(url, function(data) {
         if (data.response === 'success') {
@@ -95,12 +96,12 @@ myApp.fillProfileForm = function() {
 };
 
 myApp.addFriend = function() {
-        var url = "http://localhost:8084/Alumni_JV1/services/friend.json?username=" + myApp.vm.username() 
+        var url = "http://localhost:8084/Health%20Tracker/services/friend.json?userName=" + myApp.vm.userName() 
                         + "&friends_name=" + myApp.vm.f_full_name();
     console.log(url);
     $.getJSON(url, function(data) {
         if (data.response === 'success') {
-            window.location.href = "profile.jsp?username=" + data.username;
+            window.location.href = "profile.jsp?userName=" + data.userName;
         } else {
             alert("We were unable to link you to your friend at this time");
         }
@@ -110,7 +111,7 @@ myApp.addFriend = function() {
 myApp.updProfile = function() {
     
     var actionind = 1;
-    var url = "http://localhost:8084/Alumni_JV1/services/student.json?username=" + myApp.vm.username()
+    var url = "http://localhost:8084/Health%20Tracker/services/student.json?userName=" + myApp.vm.userName()
             + "&full_name=" + myApp.vm.updFullname() 
             + "&uniname=" + myApp.vm.updUni() 
             + "&years=" + myApp.vm.updYears()
@@ -122,7 +123,7 @@ myApp.updProfile = function() {
     $.getJSON(url, function(data) {
 
         if (data.response === 'success') {
-            window.location.href = "profile.jsp?username=" + data.username;
+            window.location.href = "profile.jsp?userName=" + data.userName;
         } 
         if (data.response === 'fail') {
             alert("We were unable to update your profile. Please try again later.");
@@ -143,7 +144,7 @@ myApp.checkSearch = function() {
 };
 myApp.findFriend = function() {
 
-    var url = "http://localhost:8084/Alumni_JV1/services/student.json?username=" + myApp.vm.findname();
+    var url = "http://localhost:8084/Health%20Tracker/services/student.json?userName=" + myApp.vm.findname();
  
     console.log(url);
     $.getJSON(url, function(data) {
@@ -174,7 +175,7 @@ myApp.getUniversityData = function() {
         for(var i=0; i<unis.length; i++){
             hrefArray.push({
                 name: unis[i].university,
-                href: 'http://localhost:8084/Alumni_JV1/uniprofile.jsp?uni_name=' + unis[i].university + '#view'
+                href: 'http://localhost:8084/Health%20Tracker/uniprofile.jsp?uni_name=' + unis[i].university + '#view'
             });
         }
         myApp.vm.university(hrefArray); //http://localhost:8084/Alumni_JV1/#Cambridge (for example)

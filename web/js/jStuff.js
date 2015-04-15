@@ -1,7 +1,7 @@
  "use strict";
             var myViewModel = {
                 schools: ko.observableArray([]),
-                username: ko.observable(),
+                userName: ko.observable(),
                 password: ko.observable()
             };
             ko.applyBindings(myViewModel);
@@ -18,13 +18,13 @@
            
             
             var getLogin = function(){
-                $.getJSON( "services/login.json?username=" + myViewModel.username() 
+                $.getJSON( "services/login.json?userName=" + myViewModel.userName() 
                         + "&password=" + myViewModel.password(), function( data ) {
                     
         // TO DO make login service
         //            if(data.response === "success"){
 
-                    if(myViewModel.username() !== "jimivine" && myViewModel.password() !== "123"){
+                    if(myViewModel.userName() !== "jimivine" && myViewModel.password() !== "123"){
                         alert("Invalid Username or Password");
                     }else{
                         window.location.href="profile.html";

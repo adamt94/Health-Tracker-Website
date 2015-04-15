@@ -68,7 +68,7 @@ public class Goal_Management extends HttpServlet {
             request.setAttribute("successfulGoals", successfulGoals);
 
             //Send user to the goal management page
-            request.getRequestDispatcher("goalManagement.jsp").forward(request, response);
+            request.getRequestDispatcher("goal.jsp").forward(request, response);
         } finally {
             out.close();
         }

@@ -5,9 +5,11 @@ var myApp = (function(myApp) {
         var self = this;
         self.university = ko.observableArray([]);
         self.username = ko.observable();
+        self.userName = ko.observable();
         self.password = ko.observable();
         self.newUsername = ko.observable();
         self.newFullname = ko.observable();
+        self.newLastname = ko.observable();
         self.newPassword = ko.observable();
         self.newEmail = ko.observable();
         self.newConfirm = ko.observable();
@@ -25,27 +27,27 @@ setInterval(function (){
 },2000);
 
 
-myApp.getUniversityData = function() {
-    $.getJSON("services/university.json", function(data) {
+myApp.getUseCasesData = function() {
+    $.getJSON("services/usecases.json", function(data) {
  
-        myApp.vm.university(data.universities);
+        myApp.vm.university(data.features);
  
     });
 };
-myApp.getUniversityData();
+myApp.getUseCasesData();
 
 
 
 myApp.getLogin = function() {
 
-    var url = "http://localhost:8084/Trackerz/services/login.json?username=" + myApp.vm.username()
+    var url = "http://localhost:8084/Health%20Tracker/services/login.json?userName=" + myApp.vm.userName()
             + "&password=" + myApp.vm.password();
     console.log(url);
     $.getJSON(url, function(data) {
 
 
         if (data.response === 'success') {
-            window.location.href = "profile.jsp?username=" + data.username;
+            window.location.href = "profile.jsp?userName=" + data.userName;
         } else {
             alert("Invalid Username or Password");
         }
@@ -63,19 +65,23 @@ myApp.checkDetails = function() {
     var b = myApp.vm.newPassword();
     var c = myApp.vm.newConfirm();
     var d = myApp.vm.newCheck();
-    var f = myApp.vm.newFirstname();
+    var f = myApp.vm.newFullname();
+    var g = myApp.vm.newLastname();
 
     var e = 0;
     var valid = false;
 
-    if (typeof a === 'undefined' || typeof b === 'undefined' || typeof f === 'undefined') {
+    //Alert 1 - null fields
+    if (typeof a === 'undefined' || typeof b === 'undefined' || typeof f === 'undefined' || typeof g === 'undefined') {
         e = 1;
     }
 
+    //Alert 10 - password
     if (b !== c) {
         e = e + 10;
     }
 
+    //Alert 100 - terms
     if (d !== true) {
         e = e + 100;
     }
@@ -119,7 +125,7 @@ myApp.checkNewAccountDetails = function() {
      *          username already used 
      */
 
-    var url = "http://localhost:8084/Alumni_JV1/services/check.json?username=" + myApp.vm.newUsername()
+    var url = "http://localhost:8084/Health%20Tracker/services/check.json?userName=" + myApp.vm.newUsername()
             + "&fullname=" + myApp.vm.newFullname()
             + "&email=" + myApp.vm.newEmail()
             + "&password=" + myApp.vm.newPassword();
@@ -129,7 +135,7 @@ myApp.checkNewAccountDetails = function() {
 
     $.getJSON(url, function(data) {
         if (data.response === 'success') {
-            window.location.href = "profile.jsp?username=" + data.username;
+            window.location.href = "profile.jsp?userName=" + data.userName;
         } else {
             alert("Error: Username already used");
         }
