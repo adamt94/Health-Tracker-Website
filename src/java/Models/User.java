@@ -162,10 +162,23 @@ public class User {
             active = 1.2;
         }
 
-        double bmr = (((6.25 * (height * 10)) + (10 * weight) - (5 * age) + Usergender)) * active;
+        double bmr = (((6.25 * (height * 100))+ (10 * weight) - (5 * age) + Usergender) * active);
         //recommended  to lose 0.5kg a week (to lost 1kg would be -1000 etc)
-        double reccommendedCalorieIntake = -500;
-        double result = (bmr - reccommendedCalorieIntake);
+          double recommendedCalorieIntake = -500;
+        if(calculateBMI()>29.9)
+        {
+            recommendedCalorieIntake = -850;
+        }
+        if(calculateBMI()>18.5 && calculateBMI()<=24.9)
+        {
+            recommendedCalorieIntake = 0;
+        }
+        if(calculateBMI()<=18.5)
+        {
+            recommendedCalorieIntake = 500;
+        }
+      
+        double result = (bmr+recommendedCalorieIntake);
         return result;
     }
 

@@ -14,7 +14,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
     <head>
-        <title>ViTracker - Home Page</title>
+        <title>ViTracker+ - Home Page</title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 	<meta name="keywords" content="Health Tracker" /> 
 	<meta name="description" content="Welcome to ViTracker." /> 

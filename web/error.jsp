@@ -13,7 +13,7 @@
 <%-- include login page --%>
 <%@ include file="index.jsp"%>
 <%}else {%>
-There was an error: <%=request.getAttribute("errors")%><br>
+There was an error: <font color="red"><%=request.getAttribute("errors")%></font><br>
 Please go to <a href="index.jsp">home page</a>
 <%} %>
 </body>

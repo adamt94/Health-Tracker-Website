@@ -979,8 +979,8 @@ public class Database {
             throw new ServletException(String.format("Error: Cannot find JDBC driver..."));
         }
         String username = "postgres"; //Username for database (postgres)
-        String password = "postgres"; //Password for database (postgres)
-        String url = "jdbc:postgresql://127.0.0.1/HealthTrackerDatabase"; //Url to connect to database
+        String password = "dbpassword"; //Password for database (postgres)
+        String url = "jdbc:postgresql://127.0.0.1/studentdb"; //Url to connect to database
         Connection connection;
         try {
             connection = DriverManager.getConnection(url, username, password);

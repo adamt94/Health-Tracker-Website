@@ -65,7 +65,7 @@ public class New_Group_Invitation extends HttpServlet {
                     + "<body>"
                     + "You have been invited to join group: <b>" + request.getParameter("jGroupName") + "</b><br><br>"
                     + "To accept this invitation, please click the link below.<br><br>"
-                    + "<a href='http://localhost:8084/Health_Tracker_Website/Join_Group?jGroupName=" + request.getParameter("jGroupName") + "'>Accept Invitation</a>"
+                    + "<a href='http://localhost:8084/Health%20Website/Join_Group?jGroupName=" + request.getParameter("jGroupName") + "'>Accept Invitation</a>"
                     + "</body>"
                     + "</html>";
 

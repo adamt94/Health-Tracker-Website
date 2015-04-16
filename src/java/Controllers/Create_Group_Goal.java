@@ -61,7 +61,7 @@ public class Create_Group_Goal extends HttpServlet {
             String targetWeight = request.getParameter("targetWeight");
             String desc = request.getParameter("description");
             
-            String url = "http://localhost:8084/Health_Tracker_Website/acceptGroupGoal.jsp?"
+            String url = "http://localhost:8084/Health%20Website/acceptGroupGoal.jsp?"
                     + "gGroup=" + groupName + ""
                     + "&gDate=" + targetDate + ""
                     + "&gDesc=" + desc + ""

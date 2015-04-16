@@ -24,22 +24,52 @@
             <input type="submit" value="Create Group">
         </form>
     </div>
+    <%
+        Models.User user3 = (Models.User) session.getAttribute("loggedInUser");
+        if (user3 == null) {
+            response.sendRedirect("index.jsp");
+        }
+        ArrayList<Models.Group> groups2 = (ArrayList<Models.Group>) request.getAttribute("createdGroups");
 
+    %>
     <div id="inviteGroup">
         <h1>Invite to a Group</h1>
         <form action="New_Group_Invitation" method="POST">
             <input type="text" name="jUsername" placeholder="Username of user"><br>
-            <input type="text" name="jGroupName" placeholder="Group name">
+            <select name="jGroupName"/>
+            <%      if (groups2 != null) {
+                    for (int j = 0; j < groups2.size(); j++) {
+            %>
+
+            <option value="<%=groups2.get(j).getGroupName()%>"> <%=groups2.get(j).getGroupName()%> </option>
+
+            <%
+                    }
+                }
+            %>
+            </select>
             <input type="submit" value="Send Invite">
         </form>
     </div>
-    
+
     <div id="createGoal">
         <h1>Create A Group Goal</h1>
         <form action ="Create_Group_Goal" method="POST">
             NEEDS TO BE A SELECT OF ALL CREATED GROUPS <br>
+
             Group Name <br>
-            <input type ="text" name="groupName"/>
+            <select name="groupName"/>
+            <%      if (groups2 != null) {
+                    for (int j = 0; j < groups2.size(); j++) {
+            %>
+
+            <option value="<%=groups2.get(j).getGroupName()%>"> <%=groups2.get(j).getGroupName()%> </option>
+
+            <%
+                    }
+                }
+            %>
+            </select>
             <br>
             Target Date <br>
             <input type="date" name="targetDate"/>
@@ -96,18 +126,18 @@
         %>
 
         <h4>Joined Groups</h4>
-
-        <%
-            ArrayList<Models.Membership> memberships = (ArrayList<Models.Membership>) request.getAttribute("activeMemberships");
-
-            if (memberships != null) {
-                for (int i = 0; i < memberships.size(); i++) {
-        %>
         <table border="1">
             <tr>
                 <th>Group Name</th>
                 <th></th>
             </tr>
+            <%
+                ArrayList<Models.Membership> memberships = (ArrayList<Models.Membership>) request.getAttribute("activeMemberships");
+
+                if (memberships != null) {
+                    for (int i = 0; i < memberships.size(); i++) {
+            %>
+
             <tr>
                 <td><%=memberships.get(i).getGroupName()%></td>
             <form action="Leave_Group" method="POST">
@@ -115,11 +145,12 @@
                 <td><input type="submit" value="Leave Group"></td>     
             </form>
             </tr>
-        </table>
+        
         <%
                 }
             }
         %>
+        </table>
     </div>
 
 </body>
