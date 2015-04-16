@@ -69,6 +69,7 @@ public class View_Profile extends HttpServlet {
                 if (database.checkWeight(username)) {
                     checkRequired = true;
                 }
+                
                 request.setAttribute("checkRequired", checkRequired);
 
                 //Get calories left for user to consume to meet their recommended count

@@ -56,7 +56,16 @@
                         <h3>Height: ${loggedInUser.height}m</h3>
                     </div>
                     <div id="weight">
-                        <h3>Weight: ${loggedInUser.weight}kg</h3>
+
+                        <% if (Boolean.valueOf((String.valueOf(request.getAttribute("checkRequired"))))) {
+                        %>
+                        <span id="highlight"><h3 id="warning2">Weight: ${loggedInUser.weight}kg Needs Updating</h3><p id="warning"></p></span>
+                            <%
+                                } else {
+                            %>
+                        <h3 id="warning2">Weight: ${loggedInUser.weight}kg</h3><p id="warning"></p>
+                        <%}//end else if
+                            %>
                     </div>
                     <div id="gender">
                         <h3>Gender: ${loggedInUser.gender}</h3>
@@ -96,9 +105,9 @@
                         <h2>Recommended Calorie Intake</h2>${loggedInUser.recommendedCalorieIntake()}
                         <a href="Get_Advanced_Statistics">Get Advanced Statistics</a>
 
-                            <h2>Calories Left to meet Recommended: </h2><%=request.getAttribute("caloriesLeftToday")%>
+                        <h2>Calories Left to meet Recommended: </h2><%=request.getAttribute("caloriesLeftToday")%>
 
-                            <!-- added by stuart -->
+                        <!-- added by stuart -->
                     </div>
                     <h4 id="header3">NOTIFICATIONS</h4>
                     <div id="notifications">
