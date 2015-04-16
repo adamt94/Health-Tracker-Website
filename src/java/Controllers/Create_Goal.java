@@ -7,7 +7,6 @@ package Controllers;
 
 import Models.Goal;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,13 +20,26 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "Create_Goal", urlPatterns = {"/Create_Goal"})
 public class Create_Goal extends HttpServlet {
+    
+    
+    Database database;
+    Goal goal;
+    
+    //Created for Unit testing purposes
+    public void setDatabase(Database given){
+        database = given;
+    }
+    public Goal getGoal(){
+        //For testing goal is being set correctly to LOSS and GAIN in JUnit
+        return goal;
+    }
+    //End of Unit testing related
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
         try {
-            Database database = new Database();
+            database = new Database();
 
             HttpSession session = request.getSession();
             Models.User current = (Models.User) session.getAttribute("loggedInUser");
@@ -40,7 +52,7 @@ public class Create_Goal extends HttpServlet {
             String description = request.getParameter("description");
 
             //Create a goal object from the details provided
-            Models.Goal goal = new Models.Goal(username, targetWeight, description, targetDate, groupName);
+            goal = new Models.Goal(username, targetWeight, description, targetDate, groupName);
             
             //If the user weighs more than the target weight
             if(current.getWeight() > targetWeight){
@@ -52,12 +64,16 @@ public class Create_Goal extends HttpServlet {
             }
 
             //Register the goal to the database
-            database.createGoal(goal);
+            if(!database.createGoal(goal)){
+                throw new Exception("Failed to create goal...");
+            }
             
             response.sendRedirect("Goal_Management");
 
+        } catch (Exception ex) {
+            request.setAttribute("errors", ex);
+            request.getRequestDispatcher("errors.jsp").forward(request, response);
         } finally {
-            out.close();
         }
     }
 

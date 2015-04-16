@@ -49,12 +49,8 @@ public class Register_Exercise extends HttpServlet {
             }
             String username = current.getUsername();
             
-            
-            
-            //DATE HAS NOT BEEN SET UP
-            //THIS IS JUST FOR TESTING OTHER COMPONENTS
-            //NEED TO MODIFY LATER
-            String date = "2299/09/09";
+            //Register exercise to current date
+            String date = "now()::date";
             
             int exerciseID = Integer.valueOf(request.getParameter("exerciseID"));
             int duration = Integer.valueOf(request.getParameter("duration"));

@@ -60,7 +60,7 @@ public class Register_Meal extends HttpServlet {
             
             double caloriesConsumed = Double.valueOf(request.getParameter("caloriesConsumed"));
             
-            //Register this exercise in the database
+            //Register this sustenance to the meal
             database.addSustenanceToMeal(username, date, type, sustenanceID, caloriesConsumed);
             
             //Send user back to their activity management page
