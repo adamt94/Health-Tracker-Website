@@ -48,7 +48,7 @@
                                 <input type='submit' class="button-link2" value='Get Meals for Date'/>
                                 <br/>
                                 <br/>
-                                <input type="date" name="requestedDate" placeholder="Date"/> 
+                                <input type="date" name="requestedDate" placeholder="Date" required> 
                             </form>
                         </article>
                         

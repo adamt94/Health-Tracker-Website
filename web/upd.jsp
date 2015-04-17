@@ -45,16 +45,16 @@
                         <input name="user_name" type="hidden" data-bind="text: username"/>
                         <h2>Update Profile Details</h2>
                         <h4>Enter Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enter Name</h4>
-                        <input name="eFirstName" type="text" value=${loggedInUser.firstName} />
-                        <input name="eLastName" type="text" value=${loggedInUser.lastName} />
-                        <h2>Age: </h2><input type="number" name="eAge" value =${loggedInUser.age}>
+                        <input name="eFirstName" type="text" required value=${loggedInUser.firstName}  >
+                        <input name="eLastName" type="text" required value=${loggedInUser.lastName} />
+                        <h2>Age: </h2><input type="number" name="eAge"  required min="0" value =${loggedInUser.age}>
                             <h2>Gender: </h2><select name="eGender">
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
                             <h4>Enter Height&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enter Weight</h4>
-                            <input name="eHeight" type="text" value =${loggedInUser.height} />
-                            <input name="eWeight" type="text" value=${loggedInUser.weight} />
+                            <input name="eHeight" type="text"  required placeholder="Meters"value =${loggedInUser.height} />
+                            <input name="eWeight" type="text"  required  placeholder="Kg"value=${loggedInUser.weight} />
                             <h4>BMI: </h4>${loggedInUser.calculateBMI()}
                             <h2>Active Level: </h2><select name="eActiveLevel">
                                 <option value="Sedentary">Sedentary</option>

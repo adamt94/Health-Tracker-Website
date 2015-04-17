@@ -14,13 +14,22 @@
         University of East Anglia, Norwich, UK. If you have any questions, please contact the
         module coordinator, Joost Noppen, at j.noppen@uea.ac.uk
     </div>
+    <script>
+        function validateForm() {
+    var x = document.forms["rGroup"]["rGroupName"].value;
+    if (x === null || x === "") {
+        alert("Name must be filled out");
+        return false;
+    }
+}
+    </script>
 </head>
 <body>
     <a href="View_Profile">Return to Profile</a>
     <div id="createGroup">
         <h1>Create Group</h1>
-        <form action="Register_Group" method="POST">
-            <input type="text" name="rGroupName" placeholder="Enter group name...">
+        <form name ="rGroup" onsubmit="return validateForm()" action="Register_Group" method="POST">
+            <input type="text" name="rGroupName" placeholder="Enter group name..." required>
             <input type="submit" value="Create Group">
         </form>
     </div>
@@ -35,7 +44,7 @@
     <div id="inviteGroup">
         <h1>Invite to a Group</h1>
         <form action="New_Group_Invitation" method="POST">
-            <input type="text" name="jUsername" placeholder="Username of user"><br>
+            <input type="text" name="jUsername" placeholder="Username of user" required><br>
             <select name="jGroupName"/>
             <%      if (groups2 != null) {
                     for (int j = 0; j < groups2.size(); j++) {
@@ -54,7 +63,7 @@
 
     <div id="createGoal">
         <h1>Create A Group Goal</h1>
-        <form action ="Create_Group_Goal" method="POST">
+        <form name ="creategoal" action ="Create_Group_Goal"  method="POST">
             NEEDS TO BE A SELECT OF ALL CREATED GROUPS <br>
 
             Group Name <br>
@@ -72,16 +81,20 @@
             </select>
             <br>
             Target Date <br>
-            <input type="date" name="targetDate"/>
+            <input type="date" name="targetDate" name="goaldate" required>
             <br>
+
+
+
             Description <br>
-            <input type="text" name="description"/>
+            <input type="text" name="description" required >
             <br>
             Target Weight <br>
-            <input type="number" name="targetWeight"/>
+            <input type="number" name="targetWeight" required>
             <br>
-            <input type="submit" value="Create Goal">
+            <input type="submit" value="Create Goal" required>
         </form>
+
     </div>
 
     <div id="manageGroups">
@@ -112,7 +125,7 @@
             <tr>
                 <td><%=groups.get(i).getGroupName()%></td>
             <form action="Delete_Group" method="POST">
-                <input type ="hidden" value="<%=groups.get(i).getGroupName()%>" name="dGroupName">
+                <input type ="hidden" value="<%=groups.get(i).getGroupName()%>" name="dGroupName" required>
                 <td><input type="submit" value="Delete Group"></td>     
             </form>
             </tr>
@@ -141,15 +154,15 @@
             <tr>
                 <td><%=memberships.get(i).getGroupName()%></td>
             <form action="Leave_Group" method="POST">
-                <input type ="hidden" value="<%=memberships.get(i).getMembershipID()%>" name="dMembershipID">
+                <input type ="hidden" value="<%=memberships.get(i).getMembershipID()%>" name="dMembershipID" required>
                 <td><input type="submit" value="Leave Group"></td>     
             </form>
             </tr>
-        
-        <%
+
+            <%
+                    }
                 }
-            }
-        %>
+            %>
         </table>
     </div>
 

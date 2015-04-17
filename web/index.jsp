@@ -65,9 +65,9 @@
             <div class="medium_text">
                 <form action="Log_in" method="POST">
                     Username:
-                    <input name="userName" id="username" type="text" placeholder=" Username" size="20" tabindex="1" value="" />					
+                    <input name="userName" id="username" type="text" placeholder=" Username" size="20" required tabindex="1" value="" />					
                     Password:
-                    <input name="password" id="password" type="password" placeholder=" Password" size="20" tabindex="2" value="" />
+                    <input name="password" id="password" type="password" placeholder=" Password" size="20"  required tabindex="2" value="" />
                     <input class="button-link" name="submit" onclick="myApp.getLogin()" type="submit" tabindex="3" value="Login" />
                     <a href="mailto:support@vitracker.com?Subject=Forgotten%20Password" target="_top" tabindex="4" 
                        style="text-decoration:underline;color:white;font-weight:normal">
@@ -129,20 +129,20 @@
                             <form name="joinus" action="Register_User" method="POST"> 
                                 <h2>Create an account</h2>
                                 <h4>Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Forename</h4>
-                                <input type="text" name="rUsername" id="newUsername" placeholder="Username" data-bind="value: newUsername"/>
-                                <input type="text" name="rFirstName" id="newFirstname" placeholder="Forename" data-bind="value: newFullname"/>
+                                <input type="text" name="rUsername" id="newUsername" placeholder="Username" required data-bind="value: newUsername"/>
+                                <input type="text" name="rFirstName" id="newFirstname" placeholder="Forename" required data-bind="value: newFullname"/>
                                 <h4>Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Surname</h4>
-                                <input type="text" name="newEmail" placeholder="Email Address" data-bind="value: newEmail"/>
-                                <input type="text" name="rLastName" id="newLastname" placeholder="Surname" data-bind="value: newLastname" />
+                                <input type="text" name="newEmail" placeholder="Email Address" required data-bind="value: newEmail"/>
+                                <input type="text" name="rLastName" id="newLastname" placeholder="Surname"  requireddata-bind="value: newLastname" />
                                 <h4>Height&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Weight</h4>
-                                <input type="text" name="rHeight" id="newHeight" placeholder="Height (metres)" />
-                                <input type="text" name="rWeight" id="newWeight" placeholder="Weight (kg)" />
+                                <input type="text" name="rHeight" id="newHeight" required placeholder="Height (metres)" />
+                                <input type="text" name="rWeight" id="newWeight" required placeholder="Weight (kg)" />
                                 <h4>Password</h4>
-                                <input type="password" name="rPassword" id="newPassword" type="password" placeholder="Password" data-bind="value: newPassword" /> 
+                                <input type="password" name="rPassword" id="newPassword" type="password" required placeholder="Password" data-bind="value: newPassword" /> 
                                 <h4>Please confirm your Password</h4>
-                                <input name="newConfirm" type="password" placeholder="Re-enter password" data-bind="value: newConfirm" />
+                                <input name="newConfirm" type="password" placeholder="Re-enter password" required data-bind="value: newConfirm" />
                                 <h4></h4>   
-                                <input name="newCheck" type="checkbox" data-bind="checked: newCheck"/>               
+                                <input name="newCheck" type="checkbox" data-bind="checked: newCheck" required>               
                                 I agree with the <a href="#" onclick="return displayTandC();" style="text-decoration:underline;color:#164f7d;font-weight:bold">terms and conditions</a>
                                 <h4></h4> 
                                 <input name="newSubmit" class="button-link2" type="submit" value="Sign Up" onclick="myApp.checkDetails()" 

@@ -45,9 +45,9 @@
                 <article class="goal">
                     <h2>Create A Goal</h2>
                     <form action ="Create_Goal" method="POST">
-                        <h4>Target Date:</h4><input type="date" name="targetDate"/>
-                        <h4>Description:</h4><input type="text" placeholder="Description" name="description"/>
-                        <h4>Target Weight:</h4><input type="number" placeholder="Target Weight" name="targetWeight"/>
+                        <h4>Target Date:</h4><input type="date" name="targetDate" required>
+                        <h4>Description:</h4><input type="text" placeholder="Description" name="description" required>
+                        <h4>Target Weight:</h4><input type="number" placeholder="Target Weight" name="targetWeight" required>
                         <h4></h4>
                         <input type="submit" class="button-link2" value="Create Goal">
                     </form>
@@ -60,8 +60,8 @@
                     Get history of a goal... <br>
 
                         <form action="Goal_Management" method="POST">
-                            <input type="number" name="requestedGoalID" placeholder="Goal ID"/> 
-                            <input type='submit' value='Get Goal History'/>
+                            <input type="number" name="requestedGoalID" placeholder="Goal ID" required> 
+                            <input type='submit' value='Get Goal History' >
                         </form>
 
                         <%
@@ -113,10 +113,10 @@
                             <form action="Update_Goal" method="POST">
                                 <tbody>
                                     <tr>
-                                        <input type ="hidden" name ="eGoalID" value ="<%=g.getGoal_ID()%>">
-                                            <td><input type="text" name="eDescription" value="<%=g.getDescription()%>"/></td>
-                                            <td><input type="number" name="eTargetWeight" value="<%=g.getTargetWeight()%>"/></td>
-                                            <td><input type="date" name="eTargetDate" value="<%=g.getTargetDate()%>"/></td>
+                                        <input type ="hidden" name ="eGoalID" value ="<%=g.getGoal_ID()%>" required>
+                                            <td><input type="text" name="eDescription" value="<%=g.getDescription()%>" required></td>
+                                            <td><input type="number" name="eTargetWeight" value="<%=g.getTargetWeight()%>" required></td>
+                                            <td><input type="date" name="eTargetDate" value="<%=g.getTargetDate()%>" required></td>
                                             <td><input type ="submit" value ='Update Goal'/></td>
                                     </tr>
                                 </tbody>

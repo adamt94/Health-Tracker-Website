@@ -53,7 +53,7 @@ public class Create_Goal extends HttpServlet {
 
             //Create a goal object from the details provided
             goal = new Models.Goal(username, targetWeight, description, targetDate, groupName);
-            
+          
             //If the user weighs more than the target weight
             if(current.getWeight() > targetWeight){
                 //set the goal to a LOSS type goal

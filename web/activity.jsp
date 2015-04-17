@@ -60,11 +60,11 @@
                                         }//endif%>
                                 </select>
                                 <br>
-                                <h4>Duration: </h4><input type="number" placeholder="0 minutes" name="duration"></input>
+                                <h4>Duration: </h4><input type="number" placeholder="0 minutes" name="duration" min="0" required ></input>
                                 <br>
-                                <h4>Distance: </h4><input type="number" placeholder="0 km/miles" name="distance"></input>
+                                <h4>Distance: </h4><input type="number" placeholder="0 km/miles" name="distance" min="0" required ></input>
                                 <h4></h4>
-                                <input type="submit" class="button-link2" value="Register Exercise"></input>
+                                <input type="submit" class="button-link2" value="Register Exercise" required></input>
                                 <h4> </h4>
                             </form>
                          </article>
@@ -72,7 +72,7 @@
                         <article class="meal">            
                             <h2>Register Meal</h2>
                             <form action="Register_Meal" method="POST">
-                                <h4>Date: </h4><input type="date" name ="rMealDate"> <h4>Type: </h4><select name="rMealType">
+                                <h4>Date: </h4><input type="date" name ="rMealDate" required> <h4>Type: </h4><select name="rMealType">
                                     <option value="breakfast">Breakfast</option>
                                     <option value="lunch">Lunch</option>    
                                     <option value="dinner">Dinner</option>
@@ -99,10 +99,10 @@
                         <article class="sustenance">
                             <h2>Add Custom Food/Drink</h2>
                             <form action="AddCustomSustenance" method="POST">
-                                <h4>Name: </h4><input type="text" placeholder="Name" name="customName"></input>
-                                <h4>Calories: </h4><input type="number" placeholder="Calories" name="customCalories"></input>
+                                <h4>Name: </h4><input type="text" placeholder="Name" name="customName" required></input>
+                                <h4>Calories: </h4><input type="number" placeholder="Calories" name="customCalories" min="0" required></input>
                                 <h4></h4>
-                                <input type="submit" class="button-link2" value="Add Custom Food/Drink"></input>
+                                <input type="submit" class="button-link2" value="Add Custom Food/Drink" ></input>
                             </form>
                             <h4></h4>
                         </article> 
