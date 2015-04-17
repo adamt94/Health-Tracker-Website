@@ -65,10 +65,7 @@ public class View_Profile extends HttpServlet {
                 request.setAttribute("upcomingGoals", upcomingGoals);
 
                 //Check if the user requires a new weight record
-                boolean checkRequired = false;
-                if (database.checkWeight(username)) {
-                    checkRequired = true;
-                }
+                boolean checkRequired = database.weightCheckRequired(username);
                 
                 request.setAttribute("checkRequired", checkRequired);
 

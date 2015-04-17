@@ -127,7 +127,7 @@ public class Database {
     
     //Returns true if this user needs to update their weight
     //Otherwise returns false
-    public boolean checkWeight(String username){
+    public boolean weightCheckRequired(String username){
         try {
             String sql;
             //See if the database has a weight entry for the past two weeks
@@ -140,13 +140,13 @@ public class Database {
             //If no entry was found
             //User requires a new weight entry
             if(rs.next()){
-                return true;
+                return false;
             }
         } catch (Exception ex) {
             System.out.println("checkWeight error: " + ex);
             return false;
         }
-        return false;
+        return true;
     }
     
     //Returns true if success
@@ -978,7 +978,7 @@ public class Database {
         } catch (ClassNotFoundException ex) {
             throw new ServletException(String.format("Error: Cannot find JDBC driver..."));
         }
-        String username = "postgres"; //Username for database (postgres)
+        String username = "student"; //Username for database (postgres)
         String password = "dbpassword"; //Password for database (postgres)
         String url = "jdbc:postgresql://127.0.0.1/studentdb"; //Url to connect to database
         Connection connection;
